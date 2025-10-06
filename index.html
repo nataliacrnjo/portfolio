@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Natalia's Portfolio</title>
+  <style>
+    /* Reset and layout */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      height: 100vh;
+      background-image: url('natalia bg-01.svg'); /* Replace with your SVG file */
+      background-size: cover;
+      background-repeat: no-repeat;
+      background-position: center;
+      font-family: sans-serif;
+      overflow: hidden;
+      position: relative;
+    }
+.cursor-star {
+  position: absolute;
+  width: 12px;
+  height: 12px;
+  background: yellow; /* gets overridden by JS */
+  clip-path: polygon(
+    50% 0%,
+    61% 35%,
+    98% 35%,
+    68% 57%,
+    79% 91%,
+    50% 70%,
+    21% 91%,
+    32% 57%,
+    2% 35%,
+    39% 35%
+  ); /* 5-point star */
+  pointer-events: none;
+  z-index: 9999;
+  animation: starFade 0.6s ease-out;
+}
+
+@keyframes starFade {
+  0% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(1.5);
+  }
+}
+
+    /* Rain animation container */
+    .rain {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .drop {
+      position: absolute;
+      width: 4px;
+      height: 20px;
+      background: rgba(255, 255, 255, 0.3);
+      animation: drop 1s linear forwards;
+    }
+
+    @keyframes drop {
+      0% {
+        transform: translateY(-20px);
+        opacity: 0.5;
+      }
+      100% {
+        transform: translateY(100vh);
+        opacity: 0;
+      }
+    }
+
+    /* Right-side icon bar */
+    .icon-bar {
+      position: fixed;
+      top: 50%;
+      right: 30px;
+      transform: translateY(-50%);
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      z-index: 10;
+    }
+
+    .icon-button {
+      width: 80px;
+      height: 80px;
+      cursor: pointer;
+      transition: transform 0.2s;
+    }
+    
+
+    .icon-button:hover {
+      transform: scale(1.1);
+    }
+
+  .popup {
+  display: none;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  width: 70vw;              /* 70% of viewport width */
+  max-width: 600px;         /* never larger than 600px */
+  height: 60vh;             /* 60% of viewport height */
+  max-height: 500px;        /* never taller than 500px */
+  transform: translate(100vw, -50%);
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 0 20px rgba(0,0,0,0.4);
+  z-index: 100;
+  overflow: hidden;
+  opacity: 0;
+  transition: transform 0.5s ease, opacity 0.5s ease;
+}
+
+
+    .popup.show {
+      display: block;
+      transform: translate(-50%, -50%);
+      opacity: 1;
+    }
+
+    .popup.hide {
+      transform: translate(100vw, -50%);
+      opacity: 0;
+    }
+
+ .popup-header {
+  background: #333;
+  color: white;
+  padding: 10px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+   .close-btn {
+  font-size: 24px;
+  color: white;
+  cursor: pointer;
+   pointer-events: auto;
+   z-index: 10; 
+  padding: 0 10px;
+}
+.close-btn:hover {
+  color: red;
+}
+
+    .popup-content {
+      padding: 20px;
+      height: calc(100% - 50px);
+      overflow-y: auto;
+    }
+
+    #popup1 {
+  top: 35%;
+  left: 30%;
+}
+
+#popupImage1 {
+  top: 50%;
+  left: 60%;
+  width: fit-content;
+}
+
+#popupImage2 {
+  top: 50%;
+  left: 60%;
+  width: fit-content;
+}
+#popup2 {
+  top: 40%;
+  left: 60%;
+  background: transparent;       /* No background */
+  border-radius: 0;              /* No rounded corners */
+  box-shadow: none;   
+}
+.popup3 {
+  position: fixed;
+  top: 50%;
+  left: 70%;
+  transform: translate(-50%, -50%);
+  width: 90vw;
+  max-width: 240px;
+  height: 90vh;
+  min-height: 400px;
+  max-height: 700px;
+  background: url('phone contact-01.svg') center center / contain no-repeat;
+  background-color: transparent;
+  object-fit: contain;
+  box-shadow: none;
+  z-index: 100;
+  overflow: hidden;
+}
+
+    .gallery {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: center;
+}
+
+.gallery img {
+  width: 150px;
+  height: 150px;
+  object-fit: contain;
+  cursor: pointer;
+  border-radius: 6px;
+  transition: transform 0.2s;
+}
+
+.gallery img:hover {
+  transform: scale(1.05);
+}
+
+/* Image modal reuse */
+.image-modal {
+  max-width: 500px;
+  max-height: 300px;
+  width: 80vw;
+  height: auto;
+}
+
+/* Flip card container */
+.card-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  position: relative;
+  z-index: 101;
+}
+
+/* Flip card container */
+.card-container {
+  perspective: 1000px;
+  width: 100%;
+  max-width: 470px;
+  aspect-ratio: 3 / 2;
+  position: relative;
+  z-index: 101;
+}
+
+/* Flip card */
+.card {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  transform-style: preserve-3d;
+  transition: transform 0.8s ease;
+}
+
+.card.flipped {
+  transform: rotateY(180deg);
+}
+
+/* Card faces */
+.card-face {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  backface-visibility: hidden;
+}
+
+.front {
+  z-index: 2;
+}
+
+.back {
+  transform: rotateY(180deg);
+}
+
+/* Flip button below the card */
+.flip-btn {
+  padding: 10px 20px;
+  font-size: 16px;
+  cursor: pointer;
+  z-index: 101;
+  position: relative;
+}
+.button-overlay {
+  position: absolute;
+  top: 3vh;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: center;
+  padding-bottom: 10vh; /* more consistent across devices */
+  gap: 0px;
+  z-index: 2;
+  pointer-events: auto;
+}
+
+/* Button styles */
+.svg-call-btn img,
+.svg-mail-btn img,
+.svg-insta-btn img {
+  width: 140px;
+  height: auto;
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+
+.svg-call-btn img:hover,
+.svg-mail-btn img:hover,
+.svg-insta-btn img:hover {
+  transform: scale(1.05);
+}
+
+  </style>
+</head>
+<body>
+<script src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js" type="module"></script>
+  <!-- Rain overlay -->
+  <div class="rain"></div>
+
+  <!-- Right-side SVG icon buttons -->
+  <div class="icon-bar">
+    <img src="natalia bg-02.svg" class="icon-button" onclick="openPopup('popup1')" alt="Icon 1" />
+    <img src="natalia bg-03.svg" class="icon-button" onclick="openPopup('popup2')" alt="Icon 2" />
+    <img src="natalia bg-04.svg" class="icon-button" onclick="openPopup('popup3')" alt="Icon 3" />
+    <img src="natalia bg-05.svg" class="icon-button" onclick="openPopup('popup4')" alt="Icon 4" />
+    <button id="musicToggle" onclick="toggleMusic()" style="background: none; border: none; cursor: pointer;">
+
+  <img id="playIcon" src="natalia bg-06.svg" width="80px" height="80px" />
+
+  <!-- Hidden SVG: Pause Icon -->
+  <img id="pauseIcon" src="natalia bg-07.svg" width="80px" height="80px" style="display: none;" />
+</button>
+
+  </div>
+
+<!-- Popup 1 -->
+<!-- Gallery Popup -->
+<div id="popup1" class="popup">
+  <div class="popup-header">
+    <span>Graphic Design Portfolio</span>
+    <span class="close-btn" onclick="closePopup('popup1')">×</span>
+  </div>
+  <div class="popup-content">
+    <div class="gallery">
+      <!-- Image buttons -->
+      <img src="emoji 2-02.svg" alt="Image 1" onclick="openPopup('popupImage1')" style="cursor: pointer; height: 80%;" />
+      <img src="Screenshot (16).png" alt="Image 2" onclick="openPopup('popupImage2')" style="cursor: pointer;" />
+      <img src="silly straw type-03.jpg" alt="Image 3" onclick="openPopup('popupImage3')" style="cursor: pointer;" />
+    </div>
+  </div>
+</div>
+
+<!-- Popup for Image 1 -->
+<div id="popupImage1" class="popup">
+  <div class="popup-header">
+    <span>Image 1 Details</span>
+    <span class="close-btn" onclick="closePopup('popupImage1')">×</span>
+  </div>
+  <div class="popup-content">
+    <img src="emoji poster 2-02.jpg" alt="Full Image 1" style="height: 100%; width: 80%;" />
+    <p>Description for Image 1.</p>
+    <button onclick="openNextImage('popupImage1', 'popupImage2')">Next</button>
+  </div>
+</div>
+
+<!-- Popup for Image 2 -->
+<div id="popupImage2" class="popup">
+  <div class="popup-header">
+    <span>Image 2 Details</span>
+    <span class="close-btn" onclick="closePopup('popupImage2')">×</span>
+  </div>
+  <div class="popup-content">
+    
+    <img src="Untitled design (4).png" alt="Full Image 2" style="height: 90%;"/>
+    <video src="fabucafe 1.mp4" autoplay loop muted style="height: 90%; border-radius:12px;"></video>
+    <p>Description for Image 2.</p>
+    <button onclick="openNextImage('popupImage2', 'popupImage1')">Previous</button>
+  </div>
+</div>
+
+
+  <!-- Popup 2 -->
+ <div id="popup2" class="popup">
+  <div class="card-wrapper">
+    <div class="card-container">
+      <div class="card" id="idCard">
+        <span class="close-btn" onclick="closePopup('popup2')">×</span>
+        <div class="card-face front">
+          <img src="id card-01.svg" alt="Front of ID Card" />
+        </div>
+        <div class="card-face back">
+          <img src="id card-02.svg" alt="Back of ID Card" />
+        </div>
+      </div>
+    </div>
+    <button class="flip-btn" onclick="flipCard()">Flip</button>
+  </div>
+</div>
+
+
+
+<div id="popup3" class="popup popup3">
+  <span class="close-btn" onclick="closePopup('popup3')">×</span>
+  <div class="button-overlay">
+    <a href="tel:786-379-3172" class="svg-call-btn">
+      <img src="phone contact-02.svg" alt="Call Us">
+    </a>
+    <a href="mailto:cornejonatalia47@gmail.com" class="svg-mail-btn">
+      <img src="phone contact-03.svg" alt="Email">
+    </a>
+    <a href="https://www.instagram.com/natalia.crnjj/" target="_blank" class="svg-insta-btn">
+      <img src="phone contact-04.svg" alt="Instagram">
+    </a>
+  </div>
+</div>
+  </div>
+</div>
+
+<!-- Popup 4 -->
+<div id="popup4" class="popup">
+  <div class="popup-header">
+    <span>Popup 4</span>
+    <span class="close-btn" onclick="closePopup('popup4')">×</span>
+  </div>
+  <div class="popup-content">
+    <!-- interactive 3D model FIRST -->
+
+<div style="width:100%; height:300px; display:block; margin-bottom:2rem;">
+  <model-viewer alt="Positive 3D Model" ar-status="not-presenting" auto-rotate="" camera-controls="" src="positive cup for export.glb" style="width:100%; height:100%; object-fit:contain; border-radius:12px;" transparent="">
+  </model-viewer>
+</div>
+  </div>
+</div>
+
+
+<!-- Audio Element -->
+<audio id="backgroundMusic" src="Charlie's Here - Pizza Parlor  Club Penguin OST.mp3" loop></audio>
+
+<script src="js/cursor.js"></script>
+  <script>
+    // Rain animation
+    const rainContainer = document.querySelector('.rain');
+    function createDrop() {
+      const drop = document.createElement('div');
+      drop.classList.add('drop');
+      drop.style.left = Math.random() * window.innerWidth + 'px';
+      drop.style.animationDuration = Math.random() * 0.5 + 0.8 + 's';
+      rainContainer.appendChild(drop);
+      setTimeout(() => drop.remove(), 1000);
+    }
+    setInterval(createDrop, 50);
+// Popup open/close
+function openPopup(id) {
+  const popup = document.getElementById(id);
+  popup.classList.add('show');
+  popup.style.display = 'block';
+}
+
+function closePopup(id) {
+  const popup = document.getElementById(id);
+  popup.classList.remove('show');
+  popup.classList.add('hide');
+  setTimeout(() => {
+    popup.classList.remove('hide');
+    popup.style.display = 'none';
+  }, 500);
+}
+
+function openNextImage(currentId, nextId) {
+  closePopup(currentId);
+  setTimeout(() => {
+    openPopup(nextId);
+  }, 500); // match transition delay
+}
+  // Open the new popup
+  const popup = document.getElementById(id);
+  popup.classList.add('show');
+  popup.style.display = 'block';
+
+
+function closePopup(id) {
+  const popup = document.getElementById(id);
+  popup.classList.remove('show');
+  popup.classList.add('hide');
+  setTimeout(() => {
+    popup.classList.remove('hide');
+    popup.style.display = 'none';
+  }, 500); // match transition duration
+}
+function flipCard() {
+  document.getElementById('idCard').classList.toggle('flipped');
+}
+
+function showPopup2() {
+  document.getElementById('popup2').classList.add('show');
+}
+
+function hidePopup2() {
+  document.getElementById('popup2').classList.remove('show');
+}
+
+function toggleMusic() {
+  const audio = document.getElementById('backgroundMusic');
+  const playIcon = document.getElementById('playIcon');
+  const pauseIcon = document.getElementById('pauseIcon');
+
+  if (audio.paused) {
+    audio.play();
+    playIcon.style.display = 'none';
+    pauseIcon.style.display = 'inline';
+  } else {
+    audio.pause();
+    playIcon.style.display = 'inline';
+    pauseIcon.style.display = 'none';
+  }
+}
+
+  </script>
+
+</body>
+</html>
