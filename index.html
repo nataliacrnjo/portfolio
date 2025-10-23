@@ -125,7 +125,7 @@ border: 1px solid #A19C7F;
   z-index: 100;
   overflow: hidden;
   opacity: 0;
-  font-family: 'Inter', sans-serif;
+ font-family: "hp-simplified-hans-regular", sans-serif; 
   transition: transform 0.5s ease, opacity 0.5s ease;
 }
 
@@ -160,10 +160,11 @@ border: 1px solid #A19C7F;
   left: 0;
   width: 100%;
   height: 30px;
-  background:linear-gradient( #5600b9);
+  background:linear-gradient( #dfdddd);
   display: flex;
   align-items: center;
   overflow: hidden;
+  border-bottom: 1.5px solid black;
   z-index: 5; /* below popups which use z-index:100 */
 }
 .top-marquee .marquee-track {
@@ -175,9 +176,17 @@ border: 1px solid #A19C7F;
 .top-marquee .marquee-track span { 
   display: inline-block;
   padding: 0 2rem;
-  font-weight: 600;
-  color: #ffffff;
+  font-weight: 570;
+  color: #000000;
+  font-family: "hp-simplified-hans-regular", sans-serif; 
+  letter-spacing: 2px;
   font-size: 12px;
+}
+@font-face {
+  font-family: "hp-simplified-hans-regular"; /* Choose a name for your font */
+  src: url("hp-simplified-hans-regular.ttf") format("truetype"); /* Path to your TTF file */
+  font-weight: normal; /* Optional: Define font weight */
+  font-style: normal; /* Optional: Define font style */
 }
 @keyframes marquee-scroll {
   0% { transform: translateX(0); }
