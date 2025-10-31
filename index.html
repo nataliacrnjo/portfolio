@@ -1,0 +1,666 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Natalia's Portfolio</title>
+  <style>
+    /* Reset and layout */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      height: 100vh;
+      background-image: url('natalia bg-01.svg'); /* Replace with your SVG file */
+      background-size: cover;
+      background-repeat: no-repeat;
+      background-position: center;
+      font-family: sans-serif;
+      overflow: hidden;
+      position: relative;
+    }
+.cursor-star {
+  position: absolute;
+  width: 12px;
+  height: 12px;
+  background: yellow; /* gets overridden by JS */
+  clip-path: polygon(
+    50% 0%,
+    61% 35%,
+    98% 35%,
+    68% 57%,
+    79% 91%,
+    50% 70%,
+    21% 91%,
+    32% 57%,
+    2% 35%,
+    39% 35%
+  ); /* 5-point star */
+  pointer-events: none;
+  z-index: 9999;
+  animation: starFade 0.6s ease-out;
+}
+
+@keyframes starFade {
+  0% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(1.5);
+  }
+}
+
+    /* Rain animation container */
+    .rain {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .drop {
+      position: absolute;
+      width: 4px;
+      height: 20px;
+      background: rgba(255, 255, 255, 0.3);
+      animation: drop 1s linear forwards;
+    }
+
+    @keyframes drop {
+      0% {
+        transform: translateY(-20px);
+        opacity: 0.5;
+      }
+      100% {
+        transform: translateY(100vh);
+        opacity: 0;
+      }
+    }
+
+    /* Right-side icon bar */
+    .icon-bar {
+      position: fixed;
+      top: 50%;
+      right: 30px;
+      transform: translateY(-50%);
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      z-index: 10;
+    }
+
+    .icon-button {
+      width: 80px;
+      height: 80px;
+      cursor: pointer;
+      transition: transform 0.2s;
+    }
+    
+
+    .icon-button:hover {
+      transform: scale(1.1);
+    }
+
+  .popup {
+  display: none;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  width: 70vw;              /* 70% of viewport width */
+  max-width: 600px;         /* never larger than 600px */
+  height: 70vh;             /* 60% of viewport height */
+  max-height: 500px;        /* never taller than 500px */
+  transform: translate(100vw, -50%);
+background: #F6F6F6;
+border: 1px solid #A19C7F;
+  box-shadow: 0 0 20px rgba(0,0,0,0.4);
+  z-index: 100;
+  overflow: hidden;
+  opacity: 0;
+ font-family: "hp-simplified-hans-regular", sans-serif; 
+  transition: transform 0.5s ease, opacity 0.5s ease;
+}
+
+
+    .popup.show {
+      display: block;
+      transform: translate(-50%, -50%);
+      opacity: 1;
+    }
+
+    .popup.hide {
+      transform: translate(100vw, -50%);
+      opacity: 0;
+    }
+
+ .popup-header {
+    background: linear-gradient(180deg, #89ABFF 44.23%, #7FA1F5 100%);
+  border: 1px solid #6B574F;
+  box-sizing: border-box;
+  padding: 10px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* header uses default cursor; dragging removed */
+
+/* Top marquee: full-width rectangle across top, scrolling text. Popups sit above (higher z-index). */
+.top-marquee {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 30px;
+  background:linear-gradient( #dfdddd);
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  border-bottom: 1.5px solid black;
+  z-index: 5; /* below popups which use z-index:100 */
+}
+.top-marquee .marquee-track {
+  display: inline-block;
+  white-space: nowrap;
+  will-change: transform;
+  animation: marquee-scroll 12s linear infinite;
+}
+.top-marquee .marquee-track span { 
+  display: inline-block;
+  padding: 0 2rem;
+  font-weight: 570;
+  color: #000000;
+  font-family: "hp-simplified-hans-regular", sans-serif; 
+  letter-spacing: 2px;
+  font-size: 12px;
+}
+@font-face {
+  font-family: "hp-simplified-hans-regular"; /* Choose a name for your font */
+  src: url("hp-simplified-hans-regular.ttf") format("truetype"); /* Path to your TTF file */
+  font-weight: normal; /* Optional: Define font weight */
+  font-style: normal; /* Optional: Define font style */
+}
+@keyframes marquee-scroll {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+@media (max-width: 600px) {
+  .top-marquee { height: 40px; }
+  .top-marquee .marquee-track span { font-size: 12px; padding: 0 1rem; }
+}
+
+   .close-btn {
+  font-size: 24px;
+  color: white;
+  cursor: pointer;
+   pointer-events: auto;
+    align-items: center;
+   z-index: 10; 
+  padding: 0 10px;
+}
+.close-btn:hover {
+  color: red;
+}
+
+    .popup-content {
+      padding: 20px;
+      height: calc(100% - 50px);
+      overflow-y: auto;
+      position: relative; /* allow absolutely-positioned buttons inside */
+    }
+
+    #popup1 {
+  top: 40%;
+  left: 30%;
+   max-width: 500px; 
+}
+
+    .gallery {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: center;
+}
+
+.gallery img {
+  width: 150px;
+  height: 150px;
+  object-fit: contain;
+  cursor: pointer;
+  border-radius: 6px;
+  transition: transform 0.2s;
+}
+
+.gallery img:hover {
+  transform: scale(1.05);
+}
+
+/* Image modal reuse */
+.image-modal {
+  max-width: 500px;
+  max-height: 300px;
+  width: 80vw;
+  height: auto;
+}
+.popup2 {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 419px;
+  height: 443px;
+  background-color: transparent;
+    box-shadow: none;
+  border: none;
+  z-index: 100;
+  overflow: hidden;
+}
+
+/* Background SVG */
+.popup-bg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  z-index: 0;
+  pointer-events: none;
+}
+
+/* Close Button */
+.close-btn {
+  position: absolute;
+  top: 7px;
+  right: 10px;
+  font-size: 24px;
+  color: #333;
+box-sizing: border-box;
+background: transparent;
+border: none;
+  cursor: pointer;
+  z-index: 3;
+}
+
+/* Text Box */
+.popup-text {
+  position: absolute;
+  top: 18.06%;
+  left: 21.96%;
+  right: 31.98%;
+  bottom: 57.34%;
+  font-family: 'Inter', sans-serif;
+  font-style: normal;
+  font-weight: 400;
+  font-size: 12px;
+  line-height: 13px;
+  color: #000000;
+  z-index: 2;
+  text-align: left;
+}
+
+
+/* Button Overlay */
+.button-overlay {
+  position: absolute;
+  bottom: 7.5%;
+  left: 0;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.2rem;
+  z-index: 2;
+}
+
+/* Button Rows */
+.button-row {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+}
+
+/* Button Styles */
+.svg-call-btn img,
+.svg-mail-btn img,
+.svg-insta-btn img {
+  width: 150px;
+  height: auto;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+.svg-call-btn img:hover,
+.svg-mail-btn img:hover,
+.svg-insta-btn img:hover {
+  transform: scale(1.05);
+}
+.flex-container {
+  display: flex;
+  justify-content: center; /* Centers horizontally */
+  align-items: center; /* Centers vertically */
+   flex-direction: column;
+}
+
+
+/* Background toggle button styles */
+#bgToggle {
+  position: fixed;
+  bottom: 25px;
+  left: 25px;
+  width: 48px;
+  height: 48px;
+  border: none;
+  background: none;
+  box-shadow: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 5; /* above popups */
+}
+#bgToggle img { width: 50px; height: 50px; }
+
+  </style>
+</head>
+<body>
+<script src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js" type="module"></script>
+  <!-- Rain overlay -->
+  <div class="rain"></div>
+  <!-- Top marquee -->
+  <div class="top-marquee" aria-hidden="false">
+    <div class="marquee-track">
+      <span>Natalia's Portfolio</span>
+      <span>Natalia's Portfolio</span>
+    </div>
+  </div>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+
+  <!-- Background switcher button -->
+  <button id="bgToggle" title="Change background" aria-label="Change background" style="display:none;">
+    <img src="natalia bg-04.svg" alt="BG" />
+  </button>
+
+  <!-- Right-side SVG icon buttons -->
+  <div class="icon-bar">
+    <img src="natalia bg-02.svg" class="icon-button" onclick="openPopup('popup1')" alt="Icon 1" />
+    <img src="natalia bg-03.svg" class="icon-button" onclick="openPopup('popup2')" alt="Icon 2" />
+    <img src="natalia bg-05.svg" class="icon-button" onclick="openPopup('popup4')" alt="Icon 4" />
+    <button id="musicToggle" onclick="toggleMusic()" style="background: none; border: none; cursor: pointer;">
+
+  <img id="playIcon" src="natalia bg-06.svg" width="80px" height="80px" />
+
+  <!-- Hidden SVG: Pause Icon -->
+  <img id="pauseIcon" src="natalia bg-07.svg" width="80px" height="80px" style="display: none;" />
+</button>
+
+  </div>
+
+<!-- Popup 1 -->
+<!-- Gallery Popup -->
+<div id="popup1" class="popup">
+  <div class="popup-header">
+    <span>Graphic Design Portfolio</span>
+    <span class="close-btn" onclick="closePopup('popup1')">×</span>
+  </div>
+  <div class="popup-content">
+    <div class="gallery">
+      <!-- Image buttons -->
+      <img src="moodjis1.gif" alt="Image 1" onclick="loadImage('image1')" style="cursor: pointer; height: 80%;" />
+<img src="fabucafe thumbnail.png" alt="Image 2" onclick="loadImage('image2')" style="cursor: pointer;" />
+      <img src="overload3.gif" alt="Image 3" onclick="loadImage('image3')" style="cursor: pointer;" />
+    </div>
+  </div>
+</div>
+
+<!-- Unified Popup -->
+<div id="imagePopup" class="popup" style="display: none;">
+  <div class="popup-header">
+    <span id="popupTitle">Image Details</span>
+ <span class="close-btn" onclick="closeUnifiedPopup()">×</span>
+  </div>
+  <div class="popup-content" id="popupContent">
+    <!-- Dynamic content will be injected here -->
+  </div>
+</div>
+
+ <!-- Popup 2 -->
+<div id="popup2" class="popup popup2">
+  <img src="phone contact-05.svg" alt="Background" class="popup-bg" />
+  <span class="close-btn" onclick="closePopup('popup2')">×</span>
+  <div class="popup-text">
+    <p>I’m Natalia and I'm passionate about designing a range of visual contents, such as typography, illustrations, UI/UX designs, web designs, and marketing assets. I consider design as my 1st language, and I am willing to take on challenges.</p>
+  </div>
+  <div class="button-overlay">
+    <div class="button-row">
+      <a href="tel:786-379-3172" class="svg-call-btn">
+        <img src="phone contact-02.svg" alt="Call Us" />
+      </a>
+      <a href="mailto:cornejonatalia47@gmail.com" class="svg-mail-btn">
+        <img src="phone contact-03.svg" alt="Email" />
+      </a>
+    </div>
+    <div class="button-row">
+      <a href="https://www.instagram.com/natalia.crnjj/" target="_blank" class="svg-insta-btn">
+        <img src="phone contact-04.svg" alt="Instagram" />
+      </a>
+    </div>
+  </div>
+</div>
+
+
+
+<!-- Popup 4 -->
+<div id="popup4" class="popup">
+  <div class="popup-header">
+    <span>Popup 4</span>
+    <span class="close-btn" onclick="closePopup('popup4')">×</span>
+  </div>
+  <div class="popup-content">
+    <!-- interactive 3D model FIRST -->
+
+<div style="width:100%; height:300px; display:block; margin-bottom:2rem;">
+  <model-viewer alt="Positive 3D Model" ar-status="not-presenting" auto-rotate="" camera-controls="" src="positive cup for export.glb" style="width:100%; height:100%; object-fit:contain; border-radius:12px; background-color: #dadada;" transparent="">
+  </model-viewer>
+</div>
+  </div>
+</div>
+
+
+<!-- Audio Element -->
+<audio id="backgroundMusic" src="Charlie's Here - Pizza Parlor  Club Penguin OST.mp3" loop></audio>
+
+<script src="cursor.js"></script>
+  <script>
+    // Rain animation
+    const rainContainer = document.querySelector('.rain');
+    function createDrop() {
+      const drop = document.createElement('div');
+      drop.classList.add('drop');
+      drop.style.left = Math.random() * window.innerWidth + 'px';
+      drop.style.animationDuration = Math.random() * 0.5 + 0.8 + 's';
+      rainContainer.appendChild(drop);
+      setTimeout(() => drop.remove(), 1000);
+    }
+    setInterval(createDrop, 50);
+// -----------------------------
+// General Popup Open/Close
+// -----------------------------
+function openPopup(id) {
+  const popup = document.getElementById(id);
+  popup.classList.add('show');
+  popup.style.display = 'block';
+}
+
+function closePopup(id) {
+  const popup = document.getElementById(id);
+  popup.classList.remove('show');
+  popup.classList.add('hide');
+  setTimeout(() => {
+    popup.classList.remove('hide');
+    popup.style.display = 'none';
+  }, 500); // match transition duration
+}
+
+function openNextImage(currentId, nextId) {
+  closePopup(currentId);
+  setTimeout(() => {
+    openPopup(nextId);
+  }, 500); // match transition delay
+}
+
+// -----------------------------
+// Unified Gallery Popup Logic
+// -----------------------------
+const imageData = {
+  image1: {
+    title: "Image 1 Details",
+    content: `
+     <p>Description for Image 1.</p>
+    <img src="moodjis1.gif" alt="Full Image 1" style="max-width: 100%; height: auto;" />
+<div style="display: flex; justify-content: flex-start; gap: 15px; margin-top: 10px;">
+  <img src="moodjis2.gif" alt="GIF 1" style="max-width: 150px; height: auto;" />
+  <img src="moodjis4.gif" alt="GIF 2" style="max-width: 150px; height: auto;" />
+  <img src="moodjis5.gif" alt="GIF 3" style="max-width: 150px; height: auto;" />
+</div>
+
+      <img src="emoji poster-01.jpg" alt="Full Image 3" style="max-width: 100%; margin-top: 10px; margin-bottom:10px" />
+      <button onclick="loadImage('image2')">Next</button>
+    `
+  },
+ image2: {
+  title: "Image 2 Details",
+  content: `
+    <div style="max-width: 600px; margin: auto; text-align: left;">
+      <img src="Untitled design (4).png" alt="Full Image 2" style="max-width: 100%; height: auto; border-radius: 12px; margin-bottom: 15px;" />
+      
+      <p style="font-size: 12px; margin-bottom: 30px;">
+        I designed a mobile app for FabuCafe to enhance the customer experience through features such as order-ahead, customization, and contactless pickup. Aimed at families, tourists, and dessert lovers, the app strengthens the café’s digital presence and sets it apart from competitors. I created user personas, wireframes, and a soft white-and-pink user interface that reflects the brand’s friendly and inviting identity. The final deliverable was a fully interactive Figma prototype prepared for developer handoff.
+      </p>
+
+      <video src="fabucafe (2).mp4" autoplay loop muted style="max-width: 100%; height: auto; border-radius: 12px; margin-bottom: 20px;"></video>
+      
+      <div style="display: flex; justify-content: space-between;">
+        <button onclick="loadImage('image1')">Previous</button>
+        <button onclick="loadImage('image3')">Next</button>
+      </div>
+    </div>
+  `
+},
+     image3: {
+    title: "Image 3 Details",
+    content: `
+            <p style="font-size: 12px; margin-bottom: 5px;">“The Reef Needs You” is an AR filter created to raise awareness about the importance of coral reefs. Coral reefs are essential habitats for many marine species, yet they are threatened by pollution and human activity. In this filter, when users open their mouth, a burst of reefs apppear but entangled in single use plastics. This represent the harm caused by waste. The repeating texts states “The Reef Needs You” and “Restore the Reef” to demonstrate urgency. A night filter is applied to make the bursting images/text pop out. The filter serves as a daily reminder that our reefs need restoration.</p>
+      <div class="flex-container">
+        <img src="overload1.gif" alt="Full Image 3" style="max-width: 300px; margin-top: 10px; margin-bottom:10px;" /> 
+         <img src="overload2.gif" alt="Full Image 3" style="max-width: 300px; margin-bottom:10px;" />
+         </div> 
+        <div style="display: flex; justify-content: space-between;">
+        <button onclick="loadImage('image1')">Previous</button>
+        <button onclick="loadImage('image3')">Next</button>
+      </div>
+    </div>
+    `
+  }
+  // Add more image entries as needed
+};
+
+function loadImage(imageKey) {
+  const popup = document.getElementById("imagePopup");
+  const title = document.getElementById("popupTitle");
+  const content = document.getElementById("popupContent");
+
+  if (imageData[imageKey]) {
+    title.innerHTML = imageData[imageKey].title;
+    content.innerHTML = imageData[imageKey].content;
+    popup.classList.add('show');
+    popup.style.display = "block";
+  }
+}
+
+function closeUnifiedPopup() {
+  const popup = document.getElementById("imagePopup");
+  popup.classList.remove('show');
+  popup.classList.add('hide');
+  setTimeout(() => {
+    popup.classList.remove('hide');
+    popup.style.display = 'none';
+  }, 500);
+}
+
+// Draggable feature removed — popups are fixed and not draggable
+
+function flipCard() {
+  document.getElementById('idCard').classList.toggle('flipped');
+}
+
+function showPopup2() {
+  document.getElementById('popup2').classList.add('show');
+}
+
+function hidePopup2() {
+  document.getElementById('popup2').classList.remove('show');
+}
+
+function toggleMusic() {
+  const audio = document.getElementById('backgroundMusic');
+  const playIcon = document.getElementById('playIcon');
+  const pauseIcon = document.getElementById('pauseIcon');
+
+  if (audio.paused) {
+    audio.play();
+    playIcon.style.display = 'none';
+    pauseIcon.style.display = 'inline';
+  } else {
+    audio.pause();
+    playIcon.style.display = 'inline';
+    pauseIcon.style.display = 'none';
+  }
+}
+
+// Background switcher: cycles through images and persists selection
+;(function() {
+  const backgrounds = [
+    "natalia bg-01.svg",
+    "natalia bg 1.2-01.svg",
+    "natalia bg 1.3-01.svg"
+  ];
+
+  const btn = document.getElementById('bgToggle');
+  const bodyEl = document.body;
+
+  function applyBackground(index) {
+    const idx = index % backgrounds.length;
+    bodyEl.style.backgroundImage = `url('${backgrounds[idx]}')`;
+    localStorage.setItem('bgIndex', idx);
+  }
+
+  document.addEventListener('DOMContentLoaded', () => {
+    // show the button
+    if (btn) btn.style.display = 'flex';
+    // restore saved background
+    const saved = parseInt(localStorage.getItem('bgIndex'), 10);
+    if (!Number.isNaN(saved)) applyBackground(saved);
+  });
+
+  if (btn) {
+    btn.addEventListener('click', () => {
+      const current = parseInt(localStorage.getItem('bgIndex') || '0', 10);
+      const next = (current + 1) % backgrounds.length;
+      applyBackground(next);
+    });
+  }
+})();
+
+  </script>
+
+</body>
+</html>
