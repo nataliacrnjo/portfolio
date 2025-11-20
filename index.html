@@ -1,0 +1,879 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Portfolio Carousel</title>
+  <style>
+    body {
+      margin: 0;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      background-image: url(bg3-01.svg);
+      background-repeat: no-repeat;
+      background-size: cover;
+      background-position: center;
+      color: #fff;
+       font-family: 'Gresco';
+    src: url('GrescoTrial-Regular.woff2') format('woff2');
+      overflow: hidden;
+    }
+ #snow {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    opacity: 0.7; /* adjust for visibility */
+    z-index: -1;   /* ensures it's behind */
+    pointer-events: none; /* prevents blocking clicks */
+  }
+    h1 {
+      position: absolute;
+      top: 40px;
+      margin: 0;
+      font-size: 3rem;
+      text-align: center;
+      color: black;
+        transform-style: preserve-3d;
+  animation: rotate3d 7s infinite linear;
+       font-family: 'Aerobics';
+    src: url('Aerobics-Regular.woff2') format('woff2'),
+    }
+@keyframes rotate3d {
+  from {
+    transform: rotateY(0deg);
+  }
+  to {
+    transform: rotateY(360deg);
+  }
+}
+.cursor-star {
+  position: absolute;
+  width: 12px;
+  height: 12px;
+  background: yellow; /* gets overridden by JS */
+  clip-path: polygon(
+    50% 0%,
+    61% 35%,
+    98% 35%,
+    68% 57%,
+    79% 91%,
+    50% 70%,
+    21% 91%,
+    32% 57%,
+    2% 35%,
+    39% 35%
+  ); /* 5-point star */
+  pointer-events: none;
+  z-index: 9999;
+  animation: starFade 0.6s ease-out;
+}
+    
+    .carousel {
+      position: relative;
+      width: 50vw;
+      height: 50vw;
+      max-width: 600px;
+      max-height: 600px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .circle {
+      position: absolute;
+      width: 38vw;
+      height: 38vw;
+      max-width: 450px;
+      max-height: 450px;
+      background: #444;
+      box-shadow: #000 1px 1px 5px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 1.5rem;
+      transition: all 0.6s ease;
+      cursor: pointer;
+      opacity: 0.3;
+      transform: scale(0.8);
+      z-index: 1;
+      object-fit: cover;
+      margin: 0 auto;
+    }
+
+    .circle.active {
+      opacity: 1;
+      transform: scale(1);
+      z-index: 2;
+    }
+
+    .circle.left {
+      opacity: 0.3;
+      transform: translateX(-25vw) scale(0.8);
+      z-index: 1;
+    }
+
+    .circle.right {
+      opacity: 0.3;
+      transform: translateX(25vw) scale(0.8);
+      z-index: 1;
+    }
+
+    .arrow {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 2rem;
+      cursor: pointer;
+      user-select: none;
+      z-index: 3;
+    }
+
+    .arrow.left { left: -60px; }
+    .arrow.right { right: -60px;}
+
+    /* Corner buttons */
+    .corner-btn {
+      position: absolute;
+      padding: 10px 20px;
+      background: none;
+      border: none;
+      color: white;
+      cursor: pointer;
+      font-size: 1rem;
+    }
+    .top-left { top: 20px; left: 20px; }
+    .top-right { top: 20px; right: 20px; }
+    .bottom-left { bottom: 20px; left: 20px; }
+    .bottom-right { bottom: 20px; right: 20px; }
+
+    /* Music button */
+    .music-btn {
+      position: absolute;
+      bottom: 20px;
+      right: 20px;
+      font-size: 2rem;
+      background: none;
+      border: none;
+      color: #ff4081;
+      cursor: pointer;
+    }
+
+    /* Modal styling */
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(0,0,0,0.8);
+      justify-content: center;
+      align-items: center;
+       z-index: 3;
+    }
+    .modal-content {
+      background: #222;
+      padding: 1.25rem; /* 20px -> rem */
+      border-radius: 0.625rem; /* 10px */
+      max-width: 65vw;
+      width: 65vw;
+      max-height: 90vh;
+      overflow-y: auto;   /* enable vertical scroll */
+      display: flex;
+      flex-direction: row;
+      gap: 1.25rem;
+    }
+    .modal-text {
+      text-align: left;
+      flex: 35%;
+      min-width: 18rem;
+      font-size: 18px;
+
+    }
+    .modal-media {
+      flex: 65%;
+      display: flex;
+    }
+    .modal-media img, .modal-media video {
+      max-width: 80vw;
+      max-height: 70vh;
+      width: auto;
+      height: auto;
+      object-fit: contain;
+      border-radius: 0.625rem;
+    }
+    
+    /* Mobile responsive - stack vertically */
+    @media (max-width: 768px) {
+      .modal-content {
+        flex-direction: column;
+        max-width: 95vw;
+        width: 95vw;
+        max-height: 95vh;
+        gap: 0.75rem;
+      }
+      .modal-text {
+        flex: 0 0 auto;
+        min-width: auto;
+        max-height: none;
+        overflow-y: visible;
+      }
+      .modal-media {
+        flex: 0 0 auto;
+        width: 100%;
+        max-height: 50vh;
+      }
+      .modal-media img, .modal-media video {
+        max-width: 90vw;
+        max-height: 50vh;
+      }
+    }
+    .close {
+      position: absolute;
+      top: 20px;
+      right: 30px;
+      font-size: 2rem;
+      cursor: pointer;
+      color: #ff4081;
+    }
+.flex-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  max-height: var(--fit-height);
+  max-width: var(--resize-parent-width);
+}
+
+.gallery-grid {
+  display: grid;
+  grid-template-columns: repeat(var(--columns, 2), 1fr);
+  gap: var(--gutter, 1rem);
+  width: 100%;
+}
+.about-me {
+  position: relative;
+  width: 100%;
+  height: 100%;
+   overflow: hidden; /* prevents scrolling */
+}
+
+.about-bg {
+  position: absolute;
+  inset: 0; /* fills modal */
+  width: fit-content;
+  z-index: 1;
+}
+
+.about-gradient {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  width: 545px;
+  height: 408px;
+  background: linear-gradient(180deg, #FFFFFF 0%, #FF70F1 100%);
+  border-radius: 12px; /* optional */
+  z-index: 2;
+}
+
+.about-text {
+  position: absolute;
+  top: 40px;
+  left: 40px;
+  width: 480px;
+   font-family: 'Gresco';
+    src: url('GrescoTrial-Regular.woff2') format('woff2');
+  font-size: 24px;
+  line-height: 33px;
+  color: #000;
+  z-index: 3;
+}
+
+.about-text a {
+  color: #70626f; /* highlight links */
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.about-text a:hover {
+  text-decoration: underline;
+}
+
+
+.modal-icons {
+  display: flex;
+  flex-direction: column;   /* stack rows vertically */
+  align-items: center;      /* center rows horizontally */
+  gap: 5px;                /* spacing between rows */
+  margin-top: auto;
+  padding-bottom: 20px;
+}
+.button-row {
+  display: flex;
+  justify-content: center;  /* center buttons in each row */
+  gap: 15px;                /* spacing between buttons */
+}
+.icon-btn {
+  display: inline-block;
+  background: none;
+  border: none;
+  cursor: pointer;
+  transition: transform 0.2s ease-in-out; /* smooth animation */
+}
+
+.icon-btn:hover {
+  transform: scale(1.2); /* makes the button 20% larger on hover */
+}
+.icon-btn img {
+  width: 70px;
+  height: 70px;
+display: block; /* prevents inline spacing issues */
+}
+
+@font-face {
+    font-family: 'Aerobics';
+    src: url('Aerobics-Regular.woff2') format('woff2'),
+        url('Aerobics-Regular.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+@font-face {
+    font-family: 'Gresco';
+    src: url('GrescoTrial-Regular.woff2') format('woff2'),
+        url('GrescoTrial-Regular.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+@media (max-width: 600px) {
+    gallery-grid {
+      grid-template-columns: repeat(var(--mobile-columns, 1), 1fr);
+      gap: var(--mobile-gutter, 1rem);
+    }
+  }
+
+  /* Flip Container Styles */
+  .flip-container {
+    perspective: 1000px;
+    width: 350px;
+    height: 380px;
+    margin: 2rem auto;
+    cursor: pointer;
+  }
+
+  .flip-card {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    transition: transform 0.6s;
+    transform-style: preserve-3d;
+  }
+
+  .flip-container.flipped .flip-card {
+    transform: rotateY(180deg);
+  }
+
+  .flip-front, .flip-back {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    backface-visibility: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 10px;
+  }
+
+  .flip-front {
+    background-color: transparent;
+  }
+
+  .flip-back {
+    background-color: transparent;
+    transform: rotateY(180deg);
+  }
+
+  .flip-front img, .flip-back img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    border-radius: 10px;
+  }
+
+  .flip-btn {
+    display: block;
+    margin: 1rem auto;
+    padding: 10px 20px;
+    background: #ff4081;
+    border: none;
+    color: white;
+    font-size: 1rem;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background 0.3s;
+  }
+
+  .flip-btn:hover {
+    background: #ff1744;
+  }
+  </style>
+</head>
+<body>
+  <canvas id="snow"></canvas>
+  <h1>NATALIA</h1>
+  <div class="carousel">
+    <div class="arrow left">
+       <img src="bg-06.svg" alt="Left Arrow" width="70" height="70"></div>
+     <div class="circle active" id="circle0">
+       <video src="moodjis thumbnail.mp4" loop autoplay muted width="450" height="450"></video>
+     </div>
+    <div class="circle right" id="circle1">
+       <video src="saturated thumbnail.mp4" loop autoplay muted width="450" height="450"></video></div>
+    <div class="circle" id="circle2">
+      <video src="fabucafe thumbnail.mp4" loop autoplay muted width="450" height="450"></video>
+     </div>
+    <div class="circle" id="circle3">
+     <img src="kimchi thumbnail-02.jpg" width="450" height="450"">
+</div>
+    <div class="circle" id="circle4">
+       <video src="bts.mp4" muted autoplay loop width="450" height="450"></video>
+</div>
+    <div class="arrow right">
+  <img src="bg-07.svg" alt="Right Arrow" width="70" height="70"></div>
+  </div>
+
+  <!-- Corner buttons -->
+  <button class="corner-btn top-left" data-modal="coffee-modal">
+    <img src="bg-05.svg" alt="Coffee" width="150" height="50"></button>
+  <button class="corner-btn top-right" data-modal="about-modal">
+       <img src="bg-02.svg" alt="About" width="150" height="50"></button>
+  <button class="corner-btn bottom-left" id="bg-toggle-btn">
+    <img src="bg-08.svg" alt="Background Toggle" width="70" height="70"></button>
+
+  <!-- Music toggle button -->
+  <button class="music-btn" id="music-btn">
+    🎵</button>
+  <audio id="bg-music" src="Jingle Bells Holiday Party Club Penguin.mp3"></audio>
+
+  <!-- Modal -->
+  <div class="modal" id="modal">
+    <span class="close" id="close">&times;</span>
+    <div class="modal-content">
+      <div class="modal-text">
+        <h2 id="modal-title"></h2>
+        <p id="modal-description"></p>
+      <div class="modal-media" id="modal-media"></div>
+   </div>
+    </div>
+  </div>
+
+  <!-- coffee modal -->
+  <div class="modal" id="coffee-modal">
+    <span class="close" data-close="coffee-modal">&times;</span>
+    <div class="modal-content">
+      <div class="modal-text">
+        <h2>Grab a coffee</h2>
+        <p>A three-dimensional coffee cup I modeled and designed that be viewed from all angles using the mouse or touch gestures. The cup is filled with short messages of positivity and encouragement to brighten your day. Take a moment to explore the model and let these uplifting words inspire you.
+      </p>
+        <div style="width:100%; height:80vh; display:block; margin-bottom:2rem;">
+  <model-viewer alt="Positive 3D Model" ar-status="not-presenting" auto-rotate="" camera-controls="" src="positive cup for export.glb" style="width:100%; height:100%; object-fit:contain; border-radius:12px; background-color: transparent">
+  </model-viewer>
+</div>
+<h2>Holiday Bonus</h2>
+ <!-- Flip Container -->
+   <button class="flip-btn" id="flip-btn">Flip</button>
+  <div class="flip-container" id="flip-container">
+    <div class="flip-card">
+      <div class="flip-front">
+        <img src="happy-01.png" alt="Gingerbread Front" >
+      </div>
+      <div class="flip-back">
+        <img src="happy-02.png" alt="Gingerbread Back">
+      </div>
+    </div>
+  </div>
+ 
+      </div>
+    </div>
+  </div>
+
+          
+
+  <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
+
+
+  <!-- about modal -->
+<div class="modal" id="about-modal">
+  <span class="close" data-close="about-modal">&times;</span>
+  
+  <div class="modal-content about-me">
+    <!-- Background image -->
+    <div class="about-bg">
+      <img src="about me bg.png" alt="About Me Background" style="object-fit:cover;"/>
+    </div>
+
+    <!-- Gradient block behind text -->
+    <div class="about-gradient"></div>
+
+    <!-- Text with embedded hyperlinks -->
+    <div class="about-text">
+      <p>
+        I create innovative designs and love solving creative problems.  
+        I’m basically a chef who cooks up ideas and serves them as clean, polished visuals.  
+        I take feedback like seasoning and use it to make every project better.  
+        I’m always ready for the next challenge.  
+      </p>
+      <p>Contact me anytime!</p>
+      <p>
+       <a href="mailto:cornejonatalia47@gmail.com">Email</a>  
+        <a href="tel:786-379-3172">Call</a>  
+       <a href="https://www.instagram.com/natalia.crnjj/" target="_blank">Instagram</a>  
+       <a href="https://www.linkedin.com/in/natalia-cornejo-38b2412a3" target="_blank">LinkedIn</a>
+      </p>
+    </div>
+  </div>
+</div>
+
+  <script>
+    const circles = document.querySelectorAll('.circle');
+    const projects = [
+      {title: "Moodjis", description: "Moodjis is my thesis project which explores how emojis can function as visual tools to promote mental health awareness and support emotional well-being in digital communication. By narrowing the focus to emoji design, this study examines how small, expressive icons can visually represent stress, self-care, emotional support, and healthy coping strategies in chat-based platforms. The project aims to create a custom series of emojis/stickers that support emotional literacy and reduce the stigma around mental health through approachable, culturally relevant symbols. Additionally, I developed a website for users to express their emotions using Moodjis on their own photos. Everything from the website was designed by me including the buttons, layout, and user experience.", 
+        media: `
+      <div class="flex-container" style="--fit-height: 80vh; max-width: 90vw;">
+        <video src="moodjis1.mov" autoplay loop muted alt="Moodjis 1" style="max-width:90vw; max-height:60vh;"></video>
+
+        <div class="gallery-grid" style="--columns: 2; --gutter: 1rem; --mobile-columns: 1; --mobile-gutter: 1.5rem;">
+          <video src="moodjis2.mov" autoplay loop muted alt="Moodjis 2" style="max-width:35vw; max-height:50vh;"></video>
+          <video src="moodjis3.mp4" autoplay loop muted alt="Moodjis 3" style="max-width:35vw; max-height:50vh;"></video>
+        </div>
+
+        <video src="moodjis4.mov" autoplay loop muted alt="Moodjis 4" style="max-width:80vw; max-height:60vh;"></video>
+        <img src="moodji exhibit.jpg" alt="Moodji Exhibit 1" style="max-width:80vw; max-height:60vh;" />
+        <img src="moodjis exhibit 2.jpg" alt="Moodji Exhibit 2" style="max-width:80vw; max-height:60vh;" />
+
+        <div class="gallery-grid" style="--columns: 2; --gutter: 1.5rem; --mobile-columns: 1; --mobile-gutter: 1.5rem;">
+          <img src="moodjis ex3.gif" alt="Moodjis GIF 5" style="max-width:35vw; max-height:50vh;" />
+          <img src="moodjis ex4.gif" alt="Moodjis GIF 6" style="max-width:35vw; max-height:50vh;" />
+        </div>
+        <img src="emoji poster-01.svg" alt="Emoji Poster" style="max-width:80vw; max-height:60vh;" />
+      </div>
+    `,},
+      {
+  title: "Stay Saturated",
+  description: "Description of Project 2",
+  media: `
+    <div class="flex-container" style="--fit-height: 80vh; max-width: 90vw;">
+      <video src="saturated.mp4" loop autoplay muted playsinline style="max-width:80vw; max-height:60vh;"></video>
+      <img src="aero_recording.gif" alt="Recording GIF" style="max-width:80vw; max-height:60vh;">
+       <video src="overload1.mp4" loop autoplay muted playsinline style="max-width:80vw; max-height:60vh;"></video>
+    </div>
+  `
+},
+      {title: "FabuCafe Mobile App", description: " I designed a mobile app for FabuCafe to enhance the customer experience through features such as order-ahead, customization, and contactless pickup. Aimed at families, tourists, and dessert lovers, the app strengthens the cafes digital presence and sets it apart from competitors. I created user personas, wireframes, and a soft white-and-pink user interface that reflects the brands friendly and inviting identity. The final deliverable was a fully interactive Figma prototype prepared for developer handoff.", 
+       media: "<video src='fabucafe (2).mp4' autoplay controls style='max-width:80vw; max-height:60vh;'></video>"},
+      {title: "Kimchi Fried Sausage Rice", description: "I designed a recipe page featuring illustrations to depict ingredients. Since the recipe is illustration-based, I decided to use a fun layout. This resulted in an easy yet fun-to-cook arrangement. I ensure that the numbered steps are next to the instructions to avoid confusion. The color choices were based on the dish. Kimchi Sausage Fried Rice is a Korean dish.", media: "<img src='kimchi sausage fried rice-01.png' style='max-width:80vw; max-height:60vh;'>"},
+      {title: "Behind The Scene", description: "I built this whole website/portfolio from scratch. I used html and css to create the layout. The layout is inspired by Just Dance, the dancing game. I also designed the assets used in the portfolio such as the buttons, background, and about me modal. This portfolio is very personalized and I added my own twist for fun. I also included some unused asset here.", media: "<img src='bts-01.png' style='max-width:80vw; max-height:60vh;'>"}
+    ];
+    let index = 0;
+
+    const modal = document.getElementById('modal');
+    const modalTitle = document.getElementById('modal-title');
+    const modalDescription = document.getElementById('modal-description');
+    const modalMedia = document.getElementById('modal-media');
+    const closeBtn = document.getElementById('close');
+
+    // Update circle positions and states
+    function updateCircles() {
+      circles.forEach((circle, i) => {
+        circle.classList.remove('active', 'left', 'right');
+        if (i === index) {
+          circle.classList.add('active');
+        } else if (i === (index - 1 + circles.length) % circles.length) {
+          circle.classList.add('left');
+        } else if (i === (index + 1) % circles.length) {
+          circle.classList.add('right');
+        }
+      });
+    }
+    (function () {
+  const colors = ["#ff086fff", "#ff972fff", "#FFFF00", "#3bffa3ff", "#00aeffff", "#e100ffff"];
+
+  function createStar(x, y) {
+    const star = document.createElement("div");
+    star.className = "cursor-star";
+
+    // Random rainbow color
+    star.style.background = colors[Math.floor(Math.random() * colors.length)];
+
+    // Position
+    star.style.left = `${x}px`;
+    star.style.top = `${y}px`;
+
+    // Random burst offset
+    const offsetX = (Math.random() - 0.5) * 60;
+    const offsetY = (Math.random() - 0.5) * 60;
+    star.style.transform = `translate(${offsetX}px, ${offsetY}px)`;
+
+    document.body.appendChild(star);
+
+    // Remove after animation
+    setTimeout(() => star.remove(), 600);
+  }
+
+  document.addEventListener("mousemove", (e) => {
+    for (let i = 0; i < 3; i++) {
+      createStar(e.pageX, e.pageY);
+    }
+  });
+})();
+
+    // Arrow navigation - left
+    document.querySelector('.arrow.left').addEventListener('click', () => {
+      index = (index - 1 + projects.length) % projects.length;
+      updateCircles();
+    });
+
+    // Arrow navigation - right
+    document.querySelector('.arrow.right').addEventListener('click', () => {
+      index = (index + 1) % projects.length;
+      updateCircles();
+    });
+
+    // Circle click opens modal
+    circles.forEach((circle) => {
+      circle.addEventListener('click', () => {
+        modalTitle.textContent = projects[index].title;
+        modalDescription.textContent = projects[index].description;
+        modalMedia.innerHTML = projects[index].media;
+        modal.style.display = "flex";
+
+        // attach click-to-zoom handlers after media is inserted
+        setTimeout(() => {
+          attachZoomHandlers();
+        }, 50);
+      });
+    });
+
+    // Create overlay element once
+    function createOverlay(){
+      const overlay = document.createElement('div');
+      overlay.id = 'zoomOverlay';
+      overlay.style.position = 'fixed';
+      overlay.style.inset = '0';
+      overlay.style.display = 'none';
+      overlay.style.alignItems = 'center';
+      overlay.style.justifyContent = 'center';
+      overlay.style.background = 'rgba(0,0,0,0.8)';
+      overlay.style.zIndex = '10050';
+      overlay.innerHTML = `
+        <div class="zoom-inner" style="position:relative; max-width:90vw; max-height:90vh;">
+          <button class="zoom-close" aria-label="Close zoom" style="position:absolute; top:-36px; right:-36px; width:36px; height:36px; border-radius:50%; border:none; background:#fff; cursor:pointer; font-size:18px;">×</button>
+          <div class="zoom-media" style="display:flex; align-items:center; justify-content:center;"></div>
+        </div>
+      `;
+      document.body.appendChild(overlay);
+      // close handlers
+      overlay.addEventListener('click', (e)=>{
+        if (e.target === overlay) hideOverlay();
+      });
+      overlay.querySelector('.zoom-close').addEventListener('click', hideOverlay);
+      return overlay;
+    }
+
+    let overlay = document.getElementById('zoomOverlay') || createOverlay();
+
+    function showOverlayForImage(src, alt){
+      const mediaWrap = overlay.querySelector('.zoom-media');
+      mediaWrap.innerHTML = '';
+      const img = document.createElement('img');
+      img.src = src;
+      img.alt = alt || '';
+      img.style.maxWidth = '90vw';
+      img.style.maxHeight = '90vh';
+      img.style.borderRadius = '8px';
+      img.style.display = 'block';
+      mediaWrap.appendChild(img);
+      overlay.style.display = 'flex';
+      document.body.style.overflow = 'hidden';
+      document.addEventListener('keydown', onKeyDown);
+    }
+
+    function showOverlayForVideo(src){
+      const mediaWrap = overlay.querySelector('.zoom-media');
+      mediaWrap.innerHTML = '';
+      const video = document.createElement('video');
+      video.src = src;
+      video.controls = true;
+      video.autoplay = true;
+      video.muted = true; // start muted to avoid autoplay blocks
+      video.loop = false;
+      video.style.maxWidth = '90vw';
+      video.style.maxHeight = '90vh';
+      video.style.borderRadius = '8px';
+      mediaWrap.appendChild(video);
+      overlay.style.display = 'flex';
+      document.body.style.overflow = 'hidden';
+      document.addEventListener('keydown', onKeyDown);
+    }
+
+    function hideOverlay(){
+      overlay.style.display = 'none';
+      const mediaWrap = overlay.querySelector('.zoom-media');
+      mediaWrap.innerHTML = '';
+      document.body.style.overflow = '';
+      document.removeEventListener('keydown', onKeyDown);
+    }
+
+    function onKeyDown(e){
+      if (e.key === 'Escape') hideOverlay();
+    }
+
+    // Attach click handlers to images/videos inside the modal
+    function attachZoomHandlers() {
+      const mediaEls = modalMedia.querySelectorAll('img, video');
+      mediaEls.forEach(el => {
+        el.style.cursor = 'zoom-in';
+        // remove existing to avoid duplicates
+        if (el._zoomHandler) el.removeEventListener('click', el._zoomHandler);
+        const handler = function(e) {
+          e.stopPropagation();
+          if (el.tagName === 'IMG') {
+            showOverlayForImage(el.src, el.alt);
+          } else if (el.tagName === 'VIDEO') {
+            showOverlayForVideo(el.src);
+          }
+        };
+        el.addEventListener('click', handler);
+        el._zoomHandler = handler;
+      });
+    }
+
+
+    // Close modal
+    closeBtn.addEventListener('click', () => {
+      modal.style.display = "none";
+    });
+    window.addEventListener('click', (e) => {
+      if (e.target === modal) modal.style.display = "none";
+    });
+
+    // Corner button modals (safe open)
+    document.querySelectorAll('.corner-btn:not(#bg-toggle-btn)').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        const modalId = btn.getAttribute('data-modal');
+        const targetModal = document.getElementById(modalId);
+        if (!targetModal) {
+          console.warn('No modal found with id:', modalId);
+          return;
+        }
+        targetModal.style.display = "flex";
+      });
+    });
+
+    // Close corner button modals
+    document.querySelectorAll('[data-close]').forEach(closeBtn => {
+      closeBtn.addEventListener('click', () => {
+        const modalId = closeBtn.getAttribute('data-close');
+        const targetModal = document.getElementById(modalId);
+        if (!targetModal) return;
+        targetModal.style.display = "none";
+      });
+    });
+
+    // Close modals when clicking outside
+    document.querySelectorAll('.modal').forEach(modalEl => {
+      modalEl.addEventListener('click', (e) => {
+        if (e.target === modalEl) {
+          modalEl.style.display = "none";
+        }
+      });
+    });
+
+    // Background toggle button (cycles through 3 backgrounds)
+    const bgToggleBtn = document.getElementById('bg-toggle-btn');
+    const backgrounds = [
+      "url('bg3-01.svg')",
+      "url('bg-01.svg')",
+      "url('bg2-01.svg')"
+    ];
+    let bgIndex = 0;
+    bgToggleBtn.addEventListener('click', () => {
+      bgIndex = (bgIndex + 1) % backgrounds.length;
+      document.body.style.backgroundImage = backgrounds[bgIndex];
+    });
+
+    // Flip container functionality
+    const flipBtn = document.getElementById('flip-btn');
+    const flipContainer = document.getElementById('flip-container');
+    flipBtn.addEventListener('click', () => {
+      flipContainer.classList.toggle('flipped');
+    });
+
+    // Music toggle
+    const musicBtn = document.getElementById('music-btn');
+    const bgMusic = document.getElementById('bg-music');
+    let playing = false;
+
+    musicBtn.addEventListener('click', () => {
+      if (!playing) {
+        bgMusic.play();
+        musicBtn.textContent = "⏸";
+        playing = true;
+      } else {
+        bgMusic.pause();
+        musicBtn.textContent = "🎵";
+        playing = false;
+      }
+    });
+    /* Snow animation */
+const canvas = document.getElementById("snow");
+const ctx = canvas.getContext("2d");
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
+
+const flakes = [];
+for (let i = 0; i < 100; i++) {
+  flakes.push({
+    x: Math.random() * canvas.width,
+    y: Math.random() * canvas.height,
+    r: Math.random() * 4 + 1,
+    d: Math.random() + 1
+  });
+}
+
+function drawSnow() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  ctx.fillStyle = "white";
+  ctx.beginPath();
+  for (let f of flakes) {
+    ctx.moveTo(f.x, f.y);
+    ctx.arc(f.x, f.y, f.r, 0, Math.PI * 2);
+  }
+  ctx.fill();
+  updateSnow();
+}
+
+let angle = 0;
+function updateSnow() {
+  angle += 0.01;
+  for (let f of flakes) {
+    f.y += Math.pow(f.d, 2) + 1;
+    f.x += Math.sin(angle) * 2;
+
+    if (f.y > canvas.height) {
+      f.y = 0;
+      f.x = Math.random() * canvas.width;
+    }
+  }
+}
+
+setInterval(drawSnow, 33);
+  </script>
+
+  <!-- Zoom Overlay -->
+  <div class="zoom-overlay" id="zoom-overlay"></div>
+
+</body>
+</html>
