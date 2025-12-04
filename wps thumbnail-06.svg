@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="Layer_2" data-name="Layer 2" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 612 612">
+  <defs>
+    <style>
+      .cls-1 {
+        letter-spacing: 0em;
+      }
+
+      .cls-2 {
+        fill: #3f3f3f;
+        font-family: Obsypac, Obsypac;
+        font-size: 64.88px;
+      }
+
+      .cls-3 {
+        letter-spacing: 0em;
+      }
+
+      .cls-4 {
+        fill: #a8cea4;
+      }
+
+      .cls-4, .cls-5, .cls-6, .cls-7, .cls-8, .cls-9 {
+        stroke-width: 0px;
+      }
+
+      .cls-10 {
+        filter: url(#drop-shadow-17);
+      }
+
+      .cls-11 {
+        letter-spacing: 0em;
+      }
+
+      .cls-5 {
+        fill: #ef8c97;
+      }
+
+      .cls-6 {
+        fill: #f73e39;
+      }
+
+      .cls-7 {
+        fill: #ededed;
+      }
+
+      .cls-12 {
+        letter-spacing: -.04em;
+      }
+
+      .cls-13 {
+        filter: url(#drop-shadow-16);
+      }
+
+      .cls-14 {
+        filter: url(#drop-shadow-18);
+      }
+
+      .cls-8 {
+        fill: #6493bc;
+      }
+
+      .cls-15 {
+        letter-spacing: -.02em;
+      }
+
+      .cls-16 {
+        letter-spacing: -.06em;
+      }
+
+      .cls-17 {
+        letter-spacing: -.01em;
+      }
+
+      .cls-18 {
+        filter: url(#drop-shadow-19);
+      }
+
+      .cls-19 {
+        letter-spacing: 0em;
+      }
+
+      .cls-20 {
+        letter-spacing: -.07em;
+      }
+
+      .cls-9 {
+        fill: #4c6759;
+      }
+    </style>
+    <filter id="drop-shadow-16" filterUnits="userSpaceOnUse">
+      <feOffset dx="0" dy="0"/>
+      <feGaussianBlur result="blur" stdDeviation="3.98"/>
+      <feFlood flood-color="#000" flood-opacity=".75"/>
+      <feComposite in2="blur" operator="in"/>
+      <feComposite in="SourceGraphic"/>
+    </filter>
+    <filter id="drop-shadow-17" filterUnits="userSpaceOnUse">
+      <feOffset dx="0" dy="0"/>
+      <feGaussianBlur result="blur-2" stdDeviation="3.98"/>
+      <feFlood flood-color="#000" flood-opacity=".75"/>
+      <feComposite in2="blur-2" operator="in"/>
+      <feComposite in="SourceGraphic"/>
+    </filter>
+    <filter id="drop-shadow-18" filterUnits="userSpaceOnUse">
+      <feOffset dx="0" dy="0"/>
+      <feGaussianBlur result="blur-3" stdDeviation="3.98"/>
+      <feFlood flood-color="#000" flood-opacity=".75"/>
+      <feComposite in2="blur-3" operator="in"/>
+      <feComposite in="SourceGraphic"/>
+    </filter>
+    <filter id="drop-shadow-19" filterUnits="userSpaceOnUse">
+      <feOffset dx="0" dy="0"/>
+      <feGaussianBlur result="blur-4" stdDeviation="3.98"/>
+      <feFlood flood-color="#000" flood-opacity=".75"/>
+      <feComposite in2="blur-4" operator="in"/>
+      <feComposite in="SourceGraphic"/>
+    </filter>
+  </defs>
+  <rect class="cls-7" width="612" height="612"/>
+  <g>
+    <g class="cls-13">
+      <g>
+        <polygon class="cls-8" points="187.43 441.54 213.9 473.37 267.83 429.45 246.41 398.46 187.43 441.54"/>
+        <path class="cls-9" d="M256.89,414.18s46.69-22.93,68.94,12.15c9.19,14.49,9.98,32.77,2.79,48.35-7.19,15.6-20.69,36.24-44.04,45.41l-12.3-17.21-7.18-73.51-8.22-15.2Z"/>
+        <polygon class="cls-4" points="270.03 498.59 288.35 523.61 216.78 580.24 195.57 553.53 270.03 498.59"/>
+        <polygon class="cls-5" points="199.3 565.57 208.67 628.39 233.44 622.96 231.05 569.24 199.3 565.57"/>
+        <polygon class="cls-9" points="233.44 594.16 330.13 590.78 330.92 624.73 234.53 623.83 233.44 594.16"/>
+      </g>
+      <g>
+        <polygon class="cls-5" points="370.48 408.97 369.71 425.36 498.83 432.02 498.94 396.26 370.48 408.97"/>
+        <polygon class="cls-6" points="363.63 416.65 349.69 489.87 368.68 494.66 389.72 425.81 368.9 425.35 368.95 418.31 363.63 416.65"/>
+        <path class="cls-9" d="M398.37,606.97s30.53-4.85,27.22-66.56l5.86-44.03,41.93,2.33-14.59,128.24-33.69-.79-1.17-20.39-25.55,1.19Z"/>
+        <polygon class="cls-6" points="340.03 612.21 340.1 623.43 425.18 626.02 424.01 605.63 340.03 612.21"/>
+        <polygon class="cls-9" points="355.07 494.09 350.83 529.22 420.8 538.54 428.61 495.94 355.07 494.09"/>
+      </g>
+    </g>
+    <g class="cls-10">
+      <rect class="cls-6" x="133.85" y="329.63" width="114.03" height="24.33" transform="translate(-145.33 141.22) rotate(-30)"/>
+      <rect class="cls-6" x="106.09" y="464.47" width="233.12" height="24.33" transform="translate(734.77 596.98) rotate(128.26)"/>
+      <rect class="cls-6" x="136.27" y="525.83" width="176" height="24.33"/>
+      <rect class="cls-6" x="170.77" y="333.55" width="146.62" height="24.33" transform="translate(100.06 -52.22) rotate(15.33)"/>
+      <rect class="cls-6" x="200.09" y="370.85" width="146.62" height="24.33" transform="translate(-94.24 676.77) rotate(-93.11)"/>
+    </g>
+    <g class="cls-14">
+      <rect class="cls-5" x="-14.05" y="210.61" width="171.61" height="36.62" transform="translate(-104.85 66.55) rotate(-30)"/>
+      <rect class="cls-5" x="-55.82" y="413.54" width="350.84" height="36.62" transform="translate(532.74 605.37) rotate(128.26)"/>
+      <rect class="cls-5" x="-10.39" y="505.89" width="264.88" height="36.62"/>
+      <rect class="cls-5" x="41.53" y="216.5" width="220.66" height="36.62" transform="translate(67.46 -31.79) rotate(15.33)"/>
+      <rect class="cls-5" x="85.64" y="272.64" width="220.66" height="36.62" transform="translate(-83.92 502.4) rotate(-93.11)"/>
+    </g>
+    <g class="cls-18">
+      <rect class="cls-8" x="373.17" y="502.37" width="227.45" height="36.86" transform="translate(818.82 1151.78) rotate(-164.67)"/>
+      <rect class="cls-8" x="378.56" y="366.97" width="222.12" height="36.86" transform="translate(1063.69 627.67) rotate(164.67)"/>
+      <rect class="cls-8" x="299.64" y="423.33" width="222.12" height="36.86" transform="translate(-52.67 827.91) rotate(-86.89)"/>
+      <rect class="cls-8" x="457.48" y="543.26" width="172.74" height="36.86" transform="translate(256.23 1288.69) rotate(-114.34)"/>
+      <rect class="cls-8" x="463.86" y="629.67" width="172.74" height="36.86" transform="translate(-265.43 887.84) rotate(-66.05)"/>
+    </g>
+  </g>
+  <text class="cls-2" transform="translate(160.63 83.72)"><tspan class="cls-15" x="0" y="0">W</tspan><tspan class="cls-19" x="40.88" y="0">ithin Printed S</tspan><tspan class="cls-20" x="339.78" y="0">p</tspan><tspan class="cls-12" x="356.91" y="0">a</tspan><tspan class="cls-1" x="383.52" y="0">ce</tspan><tspan class="cls-1" x="-145.98" y="77.86">A</tspan><tspan class="cls-3" x="-115.17" y="77.86">R</tspan><tspan class="cls-11" x="-90.57" y="77.86">T BO</tspan><tspan class="cls-17" x="-2.21" y="77.86">O</tspan><tspan class="cls-11" x="24.53" y="77.86">K </tspan><tspan class="cls-16" x="61.05" y="77.86">F</tspan><tspan class="cls-1" x="78.18" y="77.86">AIR</tspan></text>
+</svg>
