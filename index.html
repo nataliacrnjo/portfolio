@@ -155,7 +155,7 @@
   /* Side menu overlay (in front of machine, right side) */
   .side-menu{
     position:absolute; right:1.25rem; top:2.1875rem;
-    width:8.75rem; min-height:25rem;
+     width:9rem; min-width:9rem; min-height:30rem;
     background:#c28bdb;
     border:0 solid var(--machine-border);
     border-radius:1rem;
@@ -163,7 +163,8 @@
     z-index:3;
     display:flex; flex-direction:column; gap:0.625rem;
     align-items: center;
-    padding:0.625rem;
+    padding:0.5rem;
+    justify-content: space-around
   }
   .menu-video {
   width: 100%;          /* match side menu width */
@@ -270,7 +271,7 @@
   border-radius: 30px;
   border: 0.125rem solid #bb3f87c4;
   text-align: center;
-  padding-top: 0.4375rem;
+  padding-top: 0.4rem;
 }
 
 #btn-cats {
@@ -384,6 +385,9 @@
     box-shadow: 0 0.5rem 1.25rem rgba(0,0,0,0.15);
     cursor:zoom-in;
   }
+  .gallery img#fortune-cookie{
+    cursor:pointer;
+  }
 
   /* Prev/Next at bottom of modal */
   .pager{
@@ -467,6 +471,20 @@
   .sr-only{
     position:absolute; width:0.0625rem; height:0.0625rem; padding:0; margin:-0.0625rem; overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; border:0;
   }
+
+  .reveal-animation { transform: none !important; }
+
+  /* Flash burst animation */
+@keyframes flashBurst {
+  0% { opacity: 1; filter: brightness(1); }
+  40% { opacity: 0; filter: brightness(3); }
+  100% { opacity: 1; filter: brightness(1); }
+}
+
+.reveal-animation {
+  animation: flashBurst 0.6s ease-in-out;
+}
+
 </style>
 </head>
 <body>
@@ -541,9 +559,9 @@
     <div class="nutrition">
       <h2>About</h2>
       <div class="facts">
-        <div class="fact-row"><strong>Craft:</strong> <span>Graphic Designer</span></div>
-        <div class="fact-row"><strong>Location:</strong> <span>Florida</span></div>
-        <div class="fact-row"><strong>Tools:</strong> <span>Photoshop, Illustrator, After Effects, InDesign, Figma, HTML</span></div>
+        <div class="fact-row"><strong>Name:</strong> <span>Natalia Cornejo</span></div>
+        <div class="fact-row"><strong>Role:</strong> <span>Graphic Designer</span></div>
+        <div class="fact-row"><strong>Tools:</strong> <span>Adobe Creative Suite, Figma, HTML, CSS</span></div>
       </div>
       <p>I create innovative designs and love solving creative problems. I’m basically a chef who cooks up ideas and serves them as clean, polished visuals. I take feedback like seasoning and use it to make every project better. I’m always ready for the next challenge.</p>
       <div class="links">
@@ -736,19 +754,19 @@
   <div class="modal-content">
     <button class="modal-close" data-close aria-label="Close project 6">×</button>
     <div class="nutrition">
-      <h2>Project 6</h2>
+      <h2>Digital Fortune Cookie</h2>
       <div class="facts">
-        <div class="fact-row"><strong>Type:</strong> <span>?</span></div>
-        <div class="fact-row"><strong>Role:</strong> <span>?</span></div>
-        <div class="fact-row"><strong>Year:</strong> <span>?</span></div>
+        <div class="fact-row"><strong>Type:</strong> <span>Illustration, Typography, Interactive</span></div>
+        <div class="fact-row"><strong>Role:</strong> <span>Design, Art Direction</span></div>
+        <div class="fact-row"><strong>Year:</strong> <span>2026</span></div>
       </div>
-      <p>Coming Soon</p>
+      <p>Digital Fortune Cookie! Click on cookie to reveal your fortune today.</p>
       <div class="links">
         <a href="#" target="_blank" rel="noopener"></a>
       </div>
     </div>
     <div class="gallery">
-      <img src="p6-1.jpg" alt="Project 6 image 1" />
+      <img id="fortune-cookie" src="fortune cookie-01.svg" />
       <img src="p6-2.jpg" alt="Project 6 image 2" />
     </div>
     <div class="pager">
@@ -856,7 +874,7 @@ pickup.addEventListener('mouseleave', ()=>{
   const zoomImg = document.getElementById('zoomImg');
   const zoomClose = document.getElementById('zoomClose');
 
-  document.querySelectorAll('.gallery img').forEach(img=>{
+  document.querySelectorAll('.gallery img:not(#fortune-cookie)').forEach(img=>{
     img.addEventListener('click', ()=>{
       zoomImg.src = img.src;
       zoomImg.alt = img.alt || 'Zoomed image';
@@ -981,6 +999,39 @@ pickup.addEventListener('mouseleave', ()=>{
     }
   });
 })();
+
+(function() {
+  const cookieImg = document.getElementById("fortune-cookie");
+
+  // Your 4 fortune SVGs
+  const fortunes = [
+    "fortune cookie-02.svg",
+    "fortune cookie-03.svg",
+    "fortune cookie-05.svg",
+    "fortune cookie-06.svg"
+  ];
+
+  cookieImg.addEventListener("click", () => {
+    // Pick a random fortune
+    const randomFortune = fortunes[Math.floor(Math.random() * fortunes.length)];
+
+    // Add animation class
+    cookieImg.classList.add("reveal-animation");
+
+    // Swap image halfway through animation (300ms)
+    setTimeout(() => {
+      cookieImg.src = randomFortune;
+    }, 300);
+
+    // Remove animation class after animation ends
+    cookieImg.addEventListener(
+      "animationend",
+      () => cookieImg.classList.remove("reveal-animation"),
+      { once: true }
+    );
+  });
+})();
+
 </script>
 
 </body>
