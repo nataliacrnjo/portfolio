@@ -388,10 +388,10 @@
     box-shadow: 0 0.5rem 1.25rem rgba(0,0,0,0.15);
     cursor:zoom-in;
   }
-  .gallery img#fortune-cookie, img#flip-2025-01, img#flip-2025-02{
+  .gallery img#fortune-cookie, img#flip-2026-01, img#flip-2026-02, img#flip-2025-01, img#flip-2025-02{
     cursor:pointer;
   }
-  .gallery img#flip-2025-01, img#flip-2025-02{
+  .gallery img#flip-2025-01, img#flip-2025-02, img#flip-2026-01, img#flip-2026-02{
     box-shadow: none;
   }
 
@@ -755,11 +755,20 @@
     </div>
    <div class="gallery">
 
-  <!-- Flip card for Project 4 -->
+  <!-- Flip card for 2026 -->
   <div class="flip-card">
     <div class="flip-inner">
-      <img class="front" id="flip-2025-01" src="2025-01.svg" alt="Project 4 image 1" />
-      <img class="back" id="flip-2025-02" src="2025-02.svg" alt="Project 4 image 2 (back)" />
+      <img class="front" id="flip-2026-01" src="2026-01.svg" alt="2026 front" />
+      <img class="back" id="flip-2026-02" src="2026-02.svg" alt="2026 back" />
+    </div>
+    <div class="flip-hint">Click to flip</div>
+  </div>
+
+  <!-- Flip card for Project 4 (2025) -->
+  <div class="flip-card">
+    <div class="flip-inner">
+      <img class="front" id="flip-2025-01" src="2025-01.svg" alt="Project 4 image 3" />
+      <img class="back" id="flip-2025-02" src="2025-02.svg" alt="Project 4 image 4 (back)" />
     </div>
     <div class="flip-hint">Click to flip</div>
   </div>
@@ -960,7 +969,7 @@ pickup.addEventListener('mouseleave', ()=>{
   const zoomImg = document.getElementById('zoomImg');
   const zoomClose = document.getElementById('zoomClose');
 
-  document.querySelectorAll('.gallery img:not(#fortune-cookie):not(#flip-2025-01):not(#flip-2025-02)').forEach(img=>{
+  document.querySelectorAll('.gallery img:not(#fortune-cookie):not(#flip-2026-01):not(#flip-2026-02):not(#flip-2025-01):not(#flip-2025-02)').forEach(img=>{
     img.addEventListener('click', ()=>{
       zoomImg.src = img.src;
       zoomImg.alt = img.alt || 'Zoomed image';
