@@ -384,16 +384,21 @@
     background:#fff;
   }
   .gallery img{
-    width:100%; height:auto; border-radius:0.625rem;
+    width:100%; 
+    height:auto; 
+    border-radius:0.625rem;
     box-shadow: 0 0.5rem 1.25rem rgba(0,0,0,0.15);
     cursor:zoom-in;
   }
-  .gallery img#fortune-cookie, img#flip-2026-01, img#flip-2026-02, img#flip-2025-01, img#flip-2025-02{
-    cursor:pointer;
-  }
-  .gallery img#flip-2025-01, img#flip-2025-02, img#flip-2026-01, img#flip-2026-02{
-    box-shadow: none;
-  }
+  .gallery video {
+  min-height: 200px;
+  display: block;
+}
+
+ .gallery video, .gallery .gallery-video { 
+  width:100%; 
+  height:auto; 
+  border-radius:0.625rem; }
 
   /* Prev/Next at bottom of modal */
   .pager{
@@ -407,65 +412,6 @@
   }
   .pager button:hover{ filter:brightness(1.1); }
 
-.flip-card {
-  position: static;
-  width: 100%;
-  aspect-ratio: 16 / 9;
-  perspective: 1000px;
-  cursor: pointer;
-  margin: 0 auto;
-  flex-shrink: 0;
-}
-
-.gallery .flip-card {
-  border-radius: 0.625rem;
-  box-shadow: 0;
-  background: transparent;
-}
-
-.flip-inner {
-  width: 100%;
-  height: 100%;
-  position: relative;
-  transition: transform 0.7s ease;
-  transform-style: preserve-3d;
-  background: transparent;
-}
-
-.flip-card.flipped .flip-inner {
-  transform: rotateY(180deg);
-}
-
-.flip-card img {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  backface-visibility: hidden;
-  object-fit: contain;
-  top: 0;
-  left: 0;
-}
-
-.flip-card .back {
-  transform: rotateY(180deg);
-}
-
-.flip-hint {
-  position: absolute;
-  bottom: 10px;
-  width: 100%;
-  text-align: center;
-  font-size: 1.1rem;
-  color: rgba(255, 255, 255, 0.7);
-  text-shadow: 0 0 6px rgba(0,0,0,0.4);
-  pointer-events: none;
-  opacity: 0.8;
-  transition: opacity 0.3s ease;
-}
-
-.flip-card:hover .flip-hint {
-  opacity: 1;
-}
 
   /* Zoom overlay for gallery images */
   .zoom-overlay{
@@ -654,20 +600,19 @@
   <div class="modal-content">
     <button class="modal-close" data-close aria-label="Close special">×</button>
     <div class="nutrition">
-      <h2>Coming Soon</h2>
+      <h2>Digital Fortune Cookie</h2>
       <div class="facts">
-        <div class="fact-row"><strong>?</strong> <span>?</span></div>
-        <div class="fact-row"><strong>?</strong> <span>?</span></div>
-        <div class="fact-row"><strong>?</strong> <span>?</span></div>
+        <div class="fact-row"><strong>Type:</strong> <span>Illustration, Type, Interactive</span></div>
+        <div class="fact-row"><strong>Role:</strong> <span>Design, Art Direction</span></div>
+        <div class="fact-row"><strong>Year:</strong> <span>2026</span></div>
       </div>
-      <p>???</p>
+      <p>Digital Fortune Cookie! Click on cookie to reveal your fortune today.</p>
       <div class="links">
-        <a href="#" target="_blank" rel="noopener">Prototype link</a>
+        <a href="#" target="_blank" rel="noopener"></a>
       </div>
     </div>
-    <div class="gallery">
-      <img src="special1.jpg" alt="Special image 1" />
-      <img src="special2.jpg" alt="Special image 2" />
+     <div class="gallery">
+      <img id="fortune-cookie" src="fortune cookie-01.svg" />
     </div>
     </div>
   </div>
@@ -741,46 +686,25 @@
   <div class="modal-content">
     <button class="modal-close" data-close aria-label="Close project 3">×</button>
     <div class="nutrition">
-      <h2>Yearly Ritual</h2>
+      <h2>Yes & Yes</h2>
       <div class="facts">
-        <div class="fact-row"><strong>Type:</strong> <span>Typography</span></div>
+        <div class="fact-row"><strong>Type:</strong> <span>UI/UX, Illustrations</span></div>
         <div class="fact-row"><strong>Role:</strong> <span>Design, Art Direction</span></div>
-        <div class="fact-row"><strong>Year:</strong> <span>2025</span></div>
+        <div class="fact-row"><strong>Year:</strong> <span>2026</span></div>
       </div>
-      <p>This is a annual project that takes place around the New Year. The objective is to create a striking typography that will represent the New Year. The typography will be used for postcards as a way to express good fortune for the upcoming year.</p>
+      <p>Yes & Yes is a digital flower bouquet site that allows users to create their own floral arrangements. Then, they can share the link to their creation with friends and family. I illustrated the flowers and accessories. I also designed the buttons and the logo.</p>
       <div class="links">
+        <a href="https://nataliacrnjo.github.io/yesandyes/" target="_blank" rel="noopener">Create Your Digital Flower Bouquet</a> •
         <a href="#" target="_blank" rel="noopener"></a>
       </div>
     </div>
-   <div class="gallery">
-
-  <!-- Flip card for 2026 -->
-  <div class="flip-card">
-    <div class="flip-inner">
-      <img class="front" id="flip-2026-01" src="2026-01.svg" alt="2026 front" />
-      <img class="back" id="flip-2026-02" src="2026-02.svg" alt="2026 back" />
-    </div>
-    <div class="flip-hint">Click to flip</div>
-  </div>
-
-  <!-- Flip card for Project 4 (2025) -->
-  <div class="flip-card">
-    <div class="flip-inner">
-      <img class="front" id="flip-2025-01" src="2025-01.svg" alt="Project 4 image 3" />
-      <img class="back" id="flip-2025-02" src="2025-02.svg" alt="Project 4 image 4 (back)" />
-    </div>
-    <div class="flip-hint">Click to flip</div>
-  </div>
-
-  <!-- Your existing second image -->
-  <img src="2025-03.svg" alt="Project 3 image 2" />
-
+    <div class="gallery">
+      <img src="flower p.png" alt="Project 2 image 1" />
+      <video src="flower.mp4" autoplay loop muted playsinline></video>
 </div>
-
 <div class="pager">
   <button data-prev="2">Previous</button>
   <button data-next="2">Next</button>
-</div>
     </div>
   </div>
 </div>
@@ -840,20 +764,20 @@
   <div class="modal-content">
     <button class="modal-close" data-close aria-label="Close project 6">×</button>
     <div class="nutrition">
-      <h2>Digital Fortune Cookie</h2>
+      <h2>Sleep Smarter</h2>
       <div class="facts">
-        <div class="fact-row"><strong>Type:</strong> <span>Illustration, Type, Interactive</span></div>
+        <div class="fact-row"><strong>Type:</strong> <span>Typography, Layout</span></div>
         <div class="fact-row"><strong>Role:</strong> <span>Design, Art Direction</span></div>
         <div class="fact-row"><strong>Year:</strong> <span>2026</span></div>
       </div>
-      <p>Digital Fortune Cookie! Click on cookie to reveal your fortune today.</p>
+      <p>A layout design about sleep guidance and why it's important.</p>
       <div class="links">
         <a href="#" target="_blank" rel="noopener"></a>
       </div>
     </div>
     <div class="gallery">
-      <img id="fortune-cookie" src="fortune cookie-01.svg" />
-      <img src="p6-2.jpg" alt="Project 6 image 2" />
+      <img src="sleep layout-01.png" />
+       <img src="sleep layout-02.png" />
     </div>
     <div class="pager">
       <button data-prev="5">Previous</button>
