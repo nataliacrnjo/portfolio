@@ -4,502 +4,7 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Natalia's Portfolio</title>
-<style>
-  :root{
-    --machine-purple:#c28bdb;
-    --menu-purple:#c28bdb;
-    --machine-border:#979797;
-    --door-grey:#d9d9d9;
-    --bg:#0f0f12;
-    --text:#121212;
-    --white:#ffffff;
-    --accent:#333;
-    --shadow:rgba(0,0,0,0.25);
-  }
-
-  /* Base root for rem conversions (1rem = 16px) */
-  html { font-size: 16px; }
-
-  /* Page layout */
-  html,body{
-    margin:0; padding:0; background:var(--bg); color:var(--white);
-    font-family: 'Rounded Mplus 1c', sans-serif;
-  }
-  .page{
-    min-height:100vh; width:100%;
-    display:flex; align-items:center; justify-content:center;
-    position:relative; overflow:hidden;
-  }
-
-@font-face {
-    font-family: 'Honey Pocaline';
-    src: url('HoneyPocalineRegular.woff2') format('woff2');
-    font-weight: normal;
-    font-style: normal;
-    font-display: swap;
-}
-
-@font-face {
-    font-family: 'Rounded Mplus 1c';
-    src: url('RoundedMplus1c-Regular.woff2') format('woff2');
-    font-weight: normal;
-    font-style: normal;
-    font-display: swap;
-}
-
-
-  /* Optional desktop background image area (add your own) */
-  .desktop-bg{
-    position:fixed; inset:0; z-index:0;
-       background-image:url('bg-01.svg ');
-       background-size:cover; background-position:center;
-  }
-
-  /* Vending machine container */
-  .machine-wrap{
-    position:relative;
-    width:45vw; max-width:56.25rem; min-width:20rem;
-    /* Keep it tall and vertical */
-    aspect-ratio: 9 / 16;
-    /* On very wide screens, ensure vertical feel */
-    display:flex; align-items:center; justify-content:center;
-    z-index:1;
-  }
-
-  /* Mobile: take full screen */
-  @media (max-width: 50rem){
-    .machine-wrap{
-      width:100vw; max-width:none; aspect-ratio:auto;
-      height:100vh;
-    }
-  }
-
-  .machine{
-    position:relative;
-    width:100%; height:100%;
-    background:#c28bdb;
-    border-radius:0.0625rem;
-    border:0.15625rem solid var(--machine-border);
-    box-shadow: inset 0 0.4375rem 1.25rem var(--shadow), inset 0 0 0 0.125rem rgba(255,255,255,0.25);
-    overflow:hidden;
-  }
-
-
-  /* Logo area at bottom */
-  .logo-slot{
-    position:absolute; left:0; right:0; bottom:0.875rem;
-    height:4.5rem;
-    display:flex; align-items:center; justify-content:center;
-    padding:0.5rem;
-  }
-  .logo-slot .logo{
-    width:25rem; height:auto; opacity:0.95;
-  }
-
-  /* Pickup product door */
-  .pickup-door{
-    position:absolute;
-    left:50%; transform:translateX(-50%);
-    bottom:6.25rem; width:60%;
-    height:4.375rem; background:var(--door-grey);
-    border-radius:0.5rem;
-    border:0.1875rem solid #bbb;
-    box-shadow: inset 0 0.1875rem 0.5rem rgba(0,0,0,0.25), 0 0.625rem 1.25rem var(--shadow);
-    cursor:pointer;
-  }
-
-  .pickup-door:hover{
-    filter:brightness(1.05);
-  }
-
-  /* Vending slots grid: 2 columns x 3 rows */
-  .slots{
-    position:absolute;
-    top:2.1875rem; bottom:11.875rem; left:1.5rem; right:1.5rem;
-    display:grid; 
-    grid-template-columns: 1fr 1fr; 
-    grid-template-rows: repeat(3, 1fr);
-    gap:0rem;
-    padding-right:11.25rem; /* space where the side menu overlays */
-  }
-  /* Shift cans left due to overlay menu and keep vertical feel */
-  @media (max-width: 50rem){
-    .slots{
-      padding-right: 6.25rem;
-      top:1.875rem; bottom:13.75rem;
-      gap:0rem;
-    }
-  }
-
-  .slot{
-    position:relative;
-    background: url(slot-01.svg); /* inner slots are transparent so row looks conjoined */
-    border:none;
-    background-repeat: no-repeat;
-    background-size: cover;
-    border-radius:0.625rem;
-    max-height: 90%;
-    display:flex; align-items:center; justify-content:center;
-    overflow:hidden;
-    z-index: 1;
-  }
- 
-  .slot:hover{
-    border-color:#fff; cursor:pointer;
-  }
-  .slot .can{
-    max-width:95%; max-height:100%;
-    object-fit:contain; user-select:none; pointer-events:none;
-  }
-
-  /* Side menu overlay (in front of machine, right side) */
-  .side-menu{
-    position:absolute; right:1.25rem; top:2.1875rem;
-     width:9rem; min-width:9rem; min-height:30rem;
-    background:#c28bdb;
-    border:0 solid var(--machine-border);
-    border-radius:1rem;
-    box-shadow: 0 0.625rem 1.5rem var(--shadow);
-    z-index:3;
-    display:flex; flex-direction:column; gap:0.625rem;
-    align-items: center;
-    padding:0.5rem;
-    justify-content: space-around
-  }
-  .menu-video {
-  width: 100%;          /* match side menu width */
-  height: 12.5rem;        /* adjust height to your liking */
-  object-fit: cover;    /* crop/scale to fill */
-  border-radius: 0.75rem;
-  margin-bottom: 0.625rem;
-  box-shadow: 0 0.25rem 0.75rem rgba(0,0,0,0.3);
-}
-  @media (max-width: 50rem){
-  .side-menu {
-    width: 4.6875rem;   /* narrower on mobile */
-    min-width: unset;   /* remove min-width constraint */
-    height: 50vh;       /* make it taller on mobile */
-    padding: 0.375rem;  /* reduce padding */
-  }
-  .side-btn {
-    font-size: 0.5rem;  /* shrink button text */
-    padding: 0.375rem;     /* smaller buttons */
-  }
-  .menu-video {
-    height: 7.5rem;    /* shrink video panel */
-  }
-}
-
-  .side-btn{
-    background:#fff; color:#000;
-    border:none; border-radius:0.625rem;
-    padding:0.625rem 0.75rem;
-    font-weight:500; text-align:center; cursor:pointer;
-    font-size: 1.25rem;
-    box-shadow: 0 0.1875rem 0.5rem rgba(0,0,0,0.2);
-     font-family: 'Honey Pocaline'
-  }
-  .side-btn:hover{ filter:brightness(1.05); }
-  .side-deco{
-    position: absolute;
-    bottom: 0.125rem; right: 0;
-    width:12.5rem; height: 31.25rem;
-       background:url('stars-02.svg') no-repeat center;
-       background-size:contain;
-       z-index: 0;
-       pointer-events: none;
-  }
-  @media (max-width: 50rem){
-    .side-deco {
-      width:7.5rem;
-      height:auto;
-      bottom:0.125rem; right:0.1875rem;
-    }
-  }
-  #btn-about {
-  position: relative;
-  width: 100%;
-  height: 2.5rem;
-  background: #00ffff; /* cyan background */
-  border-radius: 0.375rem;
-  color: #000; /* black text */
-  font-weight: bold;
-  text-align: center;
-  line-height: 1.75rem;
-  text-transform: uppercase;
-  animation: lcdFlash 1.5s infinite alternate;
-}
-
-/* Flashing cyan glow */
-@keyframes lcdFlash {
-  0%, 100% {
-    box-shadow: 0 0 0.3125rem #0ff, 0 0 0.9375rem #0ff, 0 0 1.875rem #0ff;
-    background-color: #00ffff;
-  }
-  50% {
-    box-shadow: 0 0 0.125rem #0ff, 0 0 0.375rem #0ff;
-    background-color: #009999; /* dimmer cyan */
-  }
-}
-
-#btn-special {
-  position: relative;
-  width: 100%;
-  height: 3.75rem;
-  background: #4b4b4b;
-  border: 0.1875rem solid #868686;
-  border-radius: 0.25rem;
-  color: #fff;
-  font-weight: bold;
-  text-align: center;
-  padding-top: 0.25rem;
-}
-
-#btn-special::after {
-  content: "";
-  position: absolute;
-  bottom: 0.5rem; left: 50%;
-  transform: translateX(-50%);
-  width: 60%;
-  height: 0.625rem;
-  background: #222;
-  border: 0.125rem solid #555;
-  border-radius: 0.125rem;
-}
-#btn-music {
-  position: relative;
-  width: 90%;
-  height: 2rem;
-  background: linear-gradient(90deg, #c28bdb 0%, #d1c6d3 50%, #fad1ff 100%);
-  border-radius: 30px;
-  border: 0.125rem solid #bb3f87c4;
-  text-align: center;
-  padding-top: 0.4rem;
-}
-
-#btn-cats {
-  position: relative;
-  width: 3.75rem;
-  height: 3.75rem;
-  border-radius: 50%;   /* circle */
-  background: #9b9b9b;     /* dark panel */
-  border: 0.1875rem solid #979797;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 0;
-  transition: box-shadow 0.3s ease, border-color 0.3s ease, transform 0.1s ease;
-}
-
-/* Coin slot inside */
-#btn-cats::after {
-  content: "";
-  width: 1.875rem;
-  height: 0.375rem;
-  background: #000;
-  border: 0.125rem solid #666;
-  border-radius: 0.125rem;
-  transition: border-color 0.3s ease, background 0.3s ease;
-}
-
-/* Hover glow */
-#btn-cats:hover {
-  border-color: #0ff;
-  box-shadow: 0 0 0.625rem #0ff, 0 0 1.25rem #0ff;
-}
-#btn-cats:hover::after {
-  border-color: #0ff;
-  background: #111;
-}
-
-/* Active press effect */
-#btn-cats:active {
-  transform: scale(0.95);
-  box-shadow: 0 0 0.9375rem #0ff, 0 0 1.875rem #0ff;
-}
-#btn-cats:active::after {
-  background: #0ff;
-  border-color: #0ff;
-}
-
-  /* Modal base styles */
-  .modal{
-    position:fixed; inset:0;
-    background:rgba(0,0,0,0.55);
-    display:none; align-items:flex-start; justify-content:center;
-    padding:2.5rem 1.25rem; z-index:1000;
-    overflow:auto;
-  }
-  .modal.open{ display:flex; }
-
-  .modal-content{
-    position:relative;
-    background:#fff; color:#000;
-    width:min(56.25rem, 92vw);
-    border-radius:1rem;
-    box-shadow: 0 1.25rem 2.5rem rgba(0,0,0,0.4);
-    overflow:hidden;
-  }
-
-  /* Close button (top right) */
-  .modal-close{
-    position:absolute; top:0.75rem; right:0.75rem;
-    width:2.25rem; height:2.25rem; border-radius:50%;
-    background:#000; color:#fff; border:none; font-weight:700;
-    display:flex; align-items:center; justify-content:center;
-    cursor:pointer; z-index:20;
-  }
-  .modal-close:hover{ filter:brightness(1.15); }
-
-  /* Nutrition facts style header */
-  .nutrition{
-    border-bottom:0.375rem solid #000;
-    padding:1.5rem;
-    background:#f7f7f7;
-  }
-  .nutrition h2{
-    margin:0 0 0.625rem 0; font-size:2.25rem; letter-spacing:0.03125rem;
-   font-family: 'Honey Pocaline', sans-serif
-  }
-  .nutrition .facts{
-    border-top:0.1875rem solid #000;
-    border-bottom:0.1875rem solid #000;
-    padding:0.75rem 0;
-  }
-  .fact-row{
-    display:flex; justify-content:space-between;
-    padding:0.375rem 0; border-bottom:0.0625rem solid #000;
-  }
-  .fact-row:last-child{ border-bottom:none; }
-  .nutrition .links{
-    margin-top:0.625rem;
-  }
-  .nutrition .links a{ color:#0077cc; font-weight:600; text-decoration:none; }
-  .nutrition .links a:hover{ text-decoration:underline; }
-
-  /* Gallery (stacked) */
-  .gallery{
-    padding:1.25rem;
-    display:flex; flex-direction:column; gap:0.875rem;
-    background:#fff;
-  }
-  .gallery img{
-    width:100%; 
-    height:auto; 
-    border-radius:0.625rem;
-    box-shadow: 0 0.5rem 1.25rem rgba(0,0,0,0.15);
-    cursor:zoom-in;
-  }
-  .gallery video {
-  min-height: 200px;
-  display: block;
-}
-
- .gallery video, .gallery .gallery-video { 
-  width:100%; 
-  height:auto; 
-  border-radius:0.625rem; }
-
-  /* Prev/Next at bottom of modal */
-  .pager{
-    display:flex; justify-content:space-between; align-items:center;
-    padding:1rem 1.25rem; border-top:0.0625rem solid #ddd; background:#fafafa;
-  }
-  .pager button{
-    background:#000; color:#fff; border:none; border-radius:0.625rem;
-    padding:0.625rem 0.875rem; font-weight:700; cursor:pointer;
-    box-shadow: 0 0.1875rem 0.5rem rgba(0,0,0,0.2);
-  }
-  .pager button:hover{ filter:brightness(1.1); }
-
-
-  /* Zoom overlay for gallery images */
-  .zoom-overlay{
-    position:fixed; inset:0; background:rgba(0,0,0,0.9);
-    display:none; align-items:center; justify-content:center;
-    z-index:2000;
-  }
-  .zoom-overlay.open{ display:flex; }
-  .zoom-overlay img{
-    max-width:92vw; max-height:92vh; border-radius:0.5rem;
-  }
-  .zoom-close{
-    position:fixed; top:0.875rem; right:0.875rem;
-    width:2.5rem; height:2.5rem; border-radius:50%;
-    background:#fff; color:#000; border:none; font-weight:800;
-    display:flex; align-items:center; justify-content:center;
-    cursor:pointer; z-index:2100;
-  }
-
-  .pickup-door {
-  position:absolute;
-  left:50%; transform:translateX(-50%);
-  bottom:6.25rem; width:60%;
-  height:4.375rem; background:#d9d9d9;
-  border-radius:0.5rem; border:0.1875rem solid #bbb;
-  box-shadow: inset 0 0.1875rem 0.5rem rgba(0,0,0,0.25), 0 0.625rem 1.25rem rgba(0,0,0,0.25);
-  cursor:pointer;
-  overflow:hidden; /* keep animation inside */
-}
-
-.drop-can {
-  position: absolute;
-  top: 0.625rem; left: -6.25rem; /* start outside left edge */
-  width: 3.125rem; height: 5.625rem;
-  background: url('beer-01.svg') no-repeat center/contain; /* replace with your can SVG */
-  animation: slide 1.2s ease forwards;
-  pointer-events:none;
-}
-
-
-@keyframes slide {
-  0%   { left:-6.25rem; opacity:0; }
-  20%  { opacity:1; }
-  80%  { left:50%; transform:translateX(-50%) rotate(5deg); }
-  100% { left:50%; transform:translateX(-50%) rotate(0deg); opacity:1; }
-}
-
-  /* Cat rain animations */
-  .cat{ 
-    position:fixed; top:-7.5rem; width:11.5rem; height:11.5rem;
-    overflow:hidden; z-index:1500;
-    animation: fall 6s linear forwards;
-    will-change: transform, opacity;
-  }
-  .cat img{ width:100%; height:100%; object-fit:cover; display:block; }
-  @keyframes fall{
-    0%{ transform: translateY(-9.375rem) rotate(0deg); opacity:0; }
-    10%{ opacity:1; }
-    100%{ transform: translateY(110vh) rotate(20deg); opacity:0.95; }
-  }
-
-  /* Larger cats on high-density (Retina) displays */
-  @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
-    .cat { width: 12.75rem; height: 12.75rem; }
-  }
-  @media (-webkit-min-device-pixel-ratio: 3), (min-resolution: 288dpi) {
-    .cat { width: 14.625rem; height: 14.625rem; }
-  }
-
-  /* Accessibility helpers */
-  .sr-only{
-    position:absolute; width:0.0625rem; height:0.0625rem; padding:0; margin:-0.0625rem; overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; border:0;
-  }
-
-  .reveal-animation { transform: none !important; }
-
-  /* Flash burst animation */
-@keyframes flashBurst {
-  0% { opacity: 1; filter: brightness(1); }
-  40% { opacity: 0; filter: brightness(3); }
-  100% { opacity: 1; filter: brightness(1); }
-}
-
-.reveal-animation {
-  animation: flashBurst 0.6s ease-in-out;
-}
-
-</style>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
 <div class="desktop-bg" aria-hidden="true"></div>
@@ -519,7 +24,7 @@
 
         <button class="side-btn" id="btn-about">About</button>
         <button class="side-btn" id="btn-special">???</button>
-        <button class="side-btn" id="btn-music">Play Music</button>
+        <button class="side-btn" id="btn-music">▶</button>
         <button class="side-btn" id="btn-cats"></button>
       </div>
 
@@ -770,29 +275,66 @@
         <div class="fact-row"><strong>Role:</strong> <span>Design, Art Direction</span></div>
         <div class="fact-row"><strong>Year:</strong> <span>2026</span></div>
       </div>
-      <p>A layout design about sleep guidance and why it's important.</p>
+      <p>A layout design about sleep guidance and why it's important. The sleep guidance is called "Sleep Smarter". Interact with the page corner to explore the full spread.</p>
       <div class="links">
         <a href="#" target="_blank" rel="noopener"></a>
       </div>
     </div>
-    <div class="gallery">
-      <img src="sleep layout-01.png" />
-       <img src="sleep layout-02.png" />
+    <div class="flipbook-wrapper">
+      <div id="project5-flipbook" class="flipbook">
+
+        <!-- Page 1 (right side only) -->
+        <div class="spread active" data-index="0">
+          <div class="page blank"></div>
+          <img class="page right" src="page-01.png" alt="Page 1">
+        </div>
+
+        <!-- Spread: Page 2–3 -->
+        <div class="spread" data-index="1">
+          <img class="page left" src="page-02.png" alt="Page 2">
+          <img class="page right" src="page-03.png" alt="Page 3">
+        </div>
+
+        <!-- Spread: Page 4–5 -->
+        <div class="spread" data-index="2">
+          <img class="page left" src="page-04.png" alt="Page 4">
+          <img class="page right" src="page-05.png" alt="Page 5">
+        </div>
+
+        <!-- Spread: Page 6–7 -->
+        <div class="spread" data-index="3">
+          <img class="page left" src="page-06.png" alt="Page 6">
+          <img class="page right" src="page-07.png" alt="Page 7">
+        </div>
+
+        <!-- Last page (left side only) -->
+        <div class="spread" data-index="4">
+          <img class="page left" src="page-08.png" alt="Page 8">
+          <div class="page blank"></div>
+        </div>
+
+        <!-- Corner click zones -->
+        <button class="corner corner-prev" aria-label="Previous page"></button>
+        <button class="corner corner-next" aria-label="Next page"></button>
+      </div>
     </div>
+
     <div class="pager">
       <button data-prev="5">Previous</button>
       <button data-next="5">Next</button>
     </div>
   </div>
 </div>
+</div>
 
 <!-- Hidden audio element for music (replace src) -->
 <audio id="bgAudio" loop preload="auto">
-  <source src="Jingle Bells Holiday Party Club Penguin.mp3" type="audio/mpeg" />
+  <source src="KiiiKiii 키키 'DEBUT SONG' Instrumental - ONECOER (128k).mp3" type="audio/mpeg" />
   <!-- Add ogg or other formats if needed -->
 </audio>
 
 <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/turn.js/4.1.0/turn.min.js"></script>
 
 <script>
 (function(){
@@ -893,7 +435,8 @@ pickup.addEventListener('mouseleave', ()=>{
   const zoomImg = document.getElementById('zoomImg');
   const zoomClose = document.getElementById('zoomClose');
 
-  document.querySelectorAll('.gallery img:not(#fortune-cookie):not(#flip-2026-01):not(#flip-2026-02):not(#flip-2025-01):not(#flip-2025-02)').forEach(img=>{
+
+  document.querySelectorAll('.gallery img:not(.flipbook):not(#fortune-cookie)').forEach(img=>{
     img.addEventListener('click', ()=>{
       zoomImg.src = img.src;
       zoomImg.alt = img.alt || 'Zoomed image';
@@ -913,11 +456,11 @@ pickup.addEventListener('mouseleave', ()=>{
     try{
       if(!musicOn){
         await audio.play();
-        btnMusic.textContent = 'Pause music';
+        btnMusic.textContent = '❚❚';
         musicOn = true;
       } else {
         audio.pause();
-        btnMusic.textContent = 'Play music';
+        btnMusic.textContent = '▶';
         musicOn = false;
       }
     }catch(err){
@@ -927,21 +470,24 @@ pickup.addEventListener('mouseleave', ()=>{
   });
 
   // Modal helpers
-  function openModal(modal){
-    if(!modal) return;
-    modal.classList.add('open');
-    body.style.overflow = 'hidden';
-    // Focus trap start: focus close button
-    const closeBtn = modal.querySelector('[data-close]');
-    if(closeBtn) closeBtn.focus({preventScroll:true});
-  }
-  function closeModal(modal){
-    if(!modal) return;
-    modal.classList.remove('open');
+ function openModal(modal){
+  if(!modal) return;
+  modal.classList.add('open');
+  body.style.overflow = 'hidden';
+
     // If no modals are open, restore scroll
     const anyOpen = document.querySelector('.modal.open');
     if(!anyOpen){ body.style.overflow = ''; }
   }
+
+  // Close modal helper
+ function closeModal(modal){
+  if(!modal) return;
+  modal.classList.remove('open');
+  // restore scroll if no modals still open
+  const anyOpen = document.querySelector('.modal.open');
+  if(!anyOpen){ body.style.overflow = ''; }
+ }
 
   // Keyboard support: ESC to close topmost modal, Arrow keys to navigate projects
   window.addEventListener('keydown', (e)=>{
@@ -1049,7 +595,64 @@ pickup.addEventListener('mouseleave', ()=>{
       { once: true }
     );
   });
+  
 })();
+
+function initProject5Flipbook() {
+  const flipbook = document.getElementById('project5-flipbook');
+  if (!flipbook) return;
+
+  const spreads = Array.from(flipbook.querySelectorAll('.spread'));
+  const nextBtn = flipbook.querySelector('.corner-next');
+  const prevBtn = flipbook.querySelector('.corner-prev');
+
+  let currentIndex = 0;
+
+  function showSpread(index) {
+    spreads.forEach((spread, i) => {
+      spread.classList.toggle('active', i === index);
+    });
+  }
+
+  nextBtn.addEventListener('click', () => {
+    if (currentIndex < spreads.length - 1) {
+      currentIndex++;
+      showSpread(currentIndex);
+    }
+  });
+
+  prevBtn.addEventListener('click', () => {
+    if (currentIndex > 0) {
+      currentIndex--;
+      showSpread(currentIndex);
+    }
+  });
+
+  // Click left/right side to flip
+  spreads.forEach((spread, i) => {
+    spread.addEventListener('click', (e) => {
+      const rect = spread.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+
+      if (x > rect.width / 2 && i < spreads.length - 1) {
+        currentIndex = i + 1;
+        showSpread(currentIndex);
+      } else if (x < rect.width / 2 && i > 0) {
+        currentIndex = i - 1;
+        showSpread(currentIndex);
+      }
+    });
+  });
+
+  showSpread(0);
+}
+
+/* Initialize flipbook ONLY when modal opens */
+document.querySelector('[data-project="5"]').addEventListener('click', () => {
+  setTimeout(initProject5Flipbook, 300); // wait for modal animation
+});
+
+
 
 </script>
 
